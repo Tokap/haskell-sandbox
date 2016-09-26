@@ -40,3 +40,20 @@
 -- round up.
 
 ---------------- Exercise 1.2 -------------------------
+-- I declared let z = 2, and ran the :show command to return the following:
+:show bindings
+-- z :: Num t => t = _
+-- it :: Num t => t = _
+
+-- added additional variable declarations and received:
+-- let x = 2, let z = 5, let dog = "dog", let c = 'c'
+:show bindings
+-- $trModule :: GHC.Types.Module = _
+-- x :: Num t => t = _
+-- it :: Num t => t = _
+-- z :: Num t => t = _
+-- dog :: [Char] = _
+-- c :: Char = 'c'
+
+---------------- Exercise 1.3 -------------------------
+-- Updated WC.hs file as directed.
