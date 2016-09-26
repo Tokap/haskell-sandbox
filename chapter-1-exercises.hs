@@ -56,4 +56,16 @@
 -- c :: Char = 'c'
 
 ---------------- Exercise 1.3 -------------------------
--- Updated WC.hs file as directed.
+-- Updated WC.hs file as directed. Final product:
+main = interact wordCount
+  where wordCount input = show (length (words input)) ++ "\n"
+--Outputs: 14
+
+---------------- Exercise 1.4 -------------------------
+-- Updated WC.hs file as directed. Final product:
+-- If we need to disregard new-line breaks"
+main = interact wordCount
+  where wordCount input = show ((length (input)) - (length (lines input ))) ++ "\n"
+-- If new line breaks can be considered to be characters for our purpose, then:
+main = interact wordCount
+  where wordCount input = show (length input) ++ "\n"
