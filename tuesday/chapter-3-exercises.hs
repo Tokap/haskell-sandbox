@@ -32,6 +32,11 @@ checkLength :: [a] -> Int
 ---------------- Exercise 3.2.3 (Closing Excercise Box) -------------------------
 -- Write a function that calculates the mean of a list.
 -- Actual function in count.hs file for testing purposes. Results look like:
-meanList :: [Int] -> Int
+meanList :: [Int] -> Double
 meanList [] = 0
-meanList xs = sum xs `div` length xs
+meanList xs = (fromIntegral (sum xs)) / (fromIntegral (length xs))
+
+---------------- Exercise 3.2.4 (Closing Excercise Box) -------------------------
+makePalindrome :: [a] -> [a]
+makePalindrome [] = []
+makePalindrome xs = xs ++ reverse xs
