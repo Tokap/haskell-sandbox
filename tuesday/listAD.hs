@@ -8,8 +8,8 @@ fromList [] = Nil
 -- --fromList [Just True, Nothing, Just False]
 -- -- => Cons (Just True) (Cons Nothing (Cons (Just False) Nil))
 
-converseList (Cons x xs) = x : converseList xs
-converseList Nil = []
+converseFromList (Cons x xs) = x : converseFromList xs
+converseFromList Nil = []
 
 -- TEST INSTANCE:
--- converseList (Cons (Just True) (Cons Nothing (Cons (Just False) Nil)))
+-- converseFromList (Cons (Just True) (Cons Nothing (Cons (Just False) Nil)))

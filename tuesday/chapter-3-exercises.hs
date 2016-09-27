@@ -17,3 +17,16 @@
 
 data Tree a = Node a (Maybe (Tree a)) (Maybe (Tree a))
               deriving (Show)
+
+---------------- Exercise 3.2.1 (Closing Excercise Box) -------------------------
+-- Write a funciton to count elements in a list. Should result the same as length.
+-- Actual function in count.hs file for testing purposes. Results look like:
+checkLength [] = 0
+checkLength (_:xs) = 1 + checkLength xs
+
+---------------- Exercise 3.2.2 (Closing Excercise Box) -------------------------
+-- Add a type signature to my counting function
+-- Added the below line of code to the top of the count.hs file.
+checkLength :: [a] -> Int
+
+---------------- Exercise 3.2.3 (Closing Excercise Box) -------------------------
