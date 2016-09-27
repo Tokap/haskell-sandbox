@@ -13,10 +13,16 @@ last :: [a] -> a
 -- The list MUST be at least 1 value long, otherwise it will return an exception:
 -- *** Exception: Prelude.last: empty list
 
--- This function clearly cannot take additional computations, it can't evaluate truthiness,
--- it can't take in as an argument anything other than a list (a String counts as a list)
--- it can't talk to outside networks
+-- This function clearly cannot take more than 1 argument, it can't evaluate truthiness,
+-- it can't take in as an argument anything other than a list (a String counts as a list),
+-- it cannot return something that is of a different type than the contents of the original list.
 
 ---------------- Exercise 2.2.2 (Second Excercise Box) -------------------------
 
+-- Work shown in last-but-one.hs file.
+
 ---------------- Exercise 2.2.3 (Second Excercise Box) -------------------------
+
+-- Based on the way I wrote my function, I receive the following exception:
+-- *** Exception: Prelude.!!: negative index
+-- The above applies for both an empty list and one with less than 2 values.
