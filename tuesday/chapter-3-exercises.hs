@@ -30,3 +30,8 @@ checkLength (_:xs) = 1 + checkLength xs
 checkLength :: [a] -> Int
 
 ---------------- Exercise 3.2.3 (Closing Excercise Box) -------------------------
+-- Write a function that calculates the mean of a list.
+-- Actual function in count.hs file for testing purposes. Results look like:
+meanList :: [Int] -> Int
+meanList [] = 0
+meanList xs = sum xs `div` length xs
