@@ -21,3 +21,6 @@ altLast _ = Nothing
 safeInit :: [a] -> Maybe [a]
 safeInit xs | not (null xs) = Just (take (length xs - 1) xs)
 safeInit xs | null xs = Nothing
+
+---------------- Exercise 4.1.2 -------------------------
+splitWith :: (a -> Bool) -> [a] -> [[a]]
