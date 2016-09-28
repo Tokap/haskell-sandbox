@@ -17,4 +17,5 @@ altLast (x:xs) | null xs = Just x
 altLast (x:xs) | not (null xs) = altLast xs
 altLast _ = Nothing
 
--- safeInit :: [a] -> Maybe [a]
+-- all, but the last
+safeInit :: [a] -> Maybe [a]
