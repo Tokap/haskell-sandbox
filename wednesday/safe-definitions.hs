@@ -3,10 +3,11 @@ safeHead :: [a] -> Maybe a
 safeHead (x:xs) = Just x
 safeHead _ = Nothing
 
+safeTail :: [a] -> Maybe [a]
+safeTail (x:xs) = Just xs
+safeTail _ = Nothing
 
--- safeTail :: [a] -> Maybe [a]
---
---
+
 -- safeLast :: [a] -> Maybe a
 --
 --
