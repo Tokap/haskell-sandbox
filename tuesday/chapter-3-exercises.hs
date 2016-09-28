@@ -61,4 +61,11 @@ orderByListLength xs = sortBy listLength xs
                         | otherwise = GT
 
 ---------------- Exercise 3.2.7 (Closing Excercise Box) -------------------------
-intersperse :: a -> [[a]] -> a
+myIntersperse :: a -> [[a]] -> [a]
+myIntersperse p (x:y:xs) | null xs = x ++ [p] ++ y
+myIntersperse p (x:y:xs) | null x /= True = x ++ [p] ++ y ++ [p] ++ myIntersperse p xs
+
+---------------- Exercise 3.2.8 (Closing Excercise Box) -------------------------
+treeHeightCheck :: Tree a -> Int
+treeHeightCheck Empty = 0
+treeHeightCheck (Node _ ft st) = 1 + max (treeHeightCheck ft) (treeHeightCheck st)
