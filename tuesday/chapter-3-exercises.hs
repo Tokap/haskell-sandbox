@@ -37,6 +37,25 @@ meanList [] = 0
 meanList xs = (fromIntegral (sum xs)) / (fromIntegral (length xs))
 
 ---------------- Exercise 3.2.4 (Closing Excercise Box) -------------------------
-makePalindrome :: [a] -> [a]
-makePalindrome [] = []
-makePalindrome xs = xs ++ reverse xs
+-- Write a function that turns a list into a palindrome.
+-- Actual function in count.hs file for testing purposes. Results look like:
+generatePalindrome :: [a] -> [a]
+generatePalindrome [] = []
+generatePalindrome xs = xs ++ reverse xs
+
+---------------- Exercise 3.2.5 (Closing Excercise Box) -------------------------
+-- Write a function that checks if a list is a palindrome.
+-- Actual function in count.hs file for testing purposes. Results look like:
+checkPalindrome :: Eq a => [a] -> Bool
+checkPalindrome xs | null xs = False
+checkPalindrome xs | xs == reverse xs = True
+checkPalindrome xs | xs /= reverse xs = False
+
+---------------- Exercise 3.2.6 (Closing Excercise Box) -------------------------
+-- Create a function that sorts a list of lists based on the length of each sublist.
+-- Ascending vs Descending order was not specified. Used Asc.
+-- TEST DATA: let x = [[1,2,3],[5,6,7,8,9],[4]]
+orderByListLength :: [[a]] -> [[a]]
+orderByListLength xs = sortBy listLength xs
+  where listLength a b  | length a <= length b = LT
+                        | otherwise = GT
