@@ -34,3 +34,7 @@ treeHeightCheck :: Tree a -> Int
 treeHeightCheck Empty = 0
 treeHeightCheck (Node _ ft st) = 1 + max (treeHeightCheck ft) (treeHeightCheck st)
 ---------------- Exercise 3.2.9 -------------------------
+data Direction = TurnLeft
+               | TurnRight
+               | GoStraight
+                 deriving (Show)
