@@ -59,3 +59,6 @@ orderByListLength :: [[a]] -> [[a]]
 orderByListLength xs = sortBy listLength xs
   where listLength a b  | length a <= length b = LT
                         | otherwise = GT
+
+---------------- Exercise 3.2.7 (Closing Excercise Box) -------------------------
+intersperse :: a -> [[a]] -> a

@@ -21,3 +21,9 @@ orderByListLength :: [[a]] -> [[a]]
 orderByListLength xs = sortBy listLength xs
   where listLength a b  | length a <= length b = LT
                         | otherwise = GT
+---------------- Exercise 3.2.7 -------------------------
+myIntersperse :: a -> [[a]] -> [a]
+myIntersperse p (x:y:xs) | null xs = x ++ [p] ++ y
+myIntersperse p (x:y:xs) | null x /= True = x ++ [p] ++ y ++ [p] ++ myIntersperse p xs
+
+-- myIntersperse p xs = intercalate p xs
