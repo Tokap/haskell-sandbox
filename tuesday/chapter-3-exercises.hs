@@ -66,6 +66,13 @@ myIntersperse p (x:y:xs) | null xs = x ++ [p] ++ y
 myIntersperse p (x:y:xs) | null x /= True = x ++ [p] ++ y ++ [p] ++ myIntersperse p xs
 
 ---------------- Exercise 3.2.8 (Closing Excercise Box) -------------------------
+data Tree a = Node a (Tree a) (Tree a)
+            | Empty
+              deriving (Show)
+-- Using this particular version of Tree creation, we gain access to
+-- 'Empty' in order to check against that scenario.
 treeHeightCheck :: Tree a -> Int
 treeHeightCheck Empty = 0
 treeHeightCheck (Node _ ft st) = 1 + max (treeHeightCheck ft) (treeHeightCheck st)
+
+---------------- Exercise 3.2.9 (Closing Excercise Box) -------------------------

@@ -33,3 +33,4 @@ data Tree a = Node a (Tree a) (Tree a)
 treeHeightCheck :: Tree a -> Int
 treeHeightCheck Empty = 0
 treeHeightCheck (Node _ ft st) = 1 + max (treeHeightCheck ft) (treeHeightCheck st)
+---------------- Exercise 3.2.9 -------------------------
