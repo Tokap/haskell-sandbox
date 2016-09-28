@@ -26,7 +26,8 @@ myIntersperse :: a -> [[a]] -> [a]
 myIntersperse p (x:y:xs) | null xs = x ++ [p] ++ y
 myIntersperse p (x:y:xs) | null x /= True = x ++ [p] ++ y ++ [p] ++ myIntersperse p xs
 ---------------- Exercise 3.2.8 -------------------------
-data Tree a = Node a (Maybe (Tree a)) (Maybe (Tree a))
+data Tree a = Node a (Tree a) (Tree a)
+            | Empty
               deriving (Show)
 
 treeHeightCheck :: Tree a -> Int
