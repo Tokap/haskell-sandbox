@@ -38,3 +38,6 @@ data Direction = TurnLeft
                | TurnRight
                | GoStraight
                  deriving (Show)
+---------------- Exercise 3.2.9 -------------------------
+data Point = Point { x :: Double, y :: Double }
+             deriving (Show)
