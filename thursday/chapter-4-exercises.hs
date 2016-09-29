@@ -30,12 +30,7 @@
 -- going to use: zip for this process
 -- First, convert text lines into something useable like in prior exercise
 -- Then, take these lists and zip them
--- Finally, place results into the (original?) text file
-
-
-
-
-
+-- Finally, place results into output text file
 
 
 ---------------- Exercise 4.2.1 (Closing Excercise Box) -------------------------
