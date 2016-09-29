@@ -24,3 +24,9 @@ safeInit xs | null xs = Nothing
 
 ---------------- Exercise 4.1.2 -------------------------
 splitWith :: (a -> Bool) -> [a] -> [[a]]
+splitWith f [] = []
+splitWith f (x:xs) | not (f x) = splitWith f xs
+splitWith f xs = (takeWhile f xs):(splitWith f next)
+                 where remaining = dropWhile f xs
+                       oppLogic f x = not (f x)
+                       next = dropWhile (oppLogic f) remaining
