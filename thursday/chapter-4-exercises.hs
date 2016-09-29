@@ -33,4 +33,8 @@
 -- Finally, place results into output text file
 
 
----------------- Exercise 4.2.1 (Closing Excercise Box) -------------------------
+------------ Exercise 4.2.1 & 4.2.2 (Second Excercise Box) ---------------------
+
+-- Rewrite asInt using a fold
+
+---------------- Exercise 4.2.3 (Second Excercise Box) -------------------------
