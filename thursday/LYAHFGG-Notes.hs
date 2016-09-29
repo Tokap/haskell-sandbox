@@ -1,0 +1,5 @@
+-- List comprehensions are very similar to set comprehensions. We'll stick to
+-- getting the first 10 even numbers for now. The list comprehension we could use
+-- is [x*2 | x <- [1..10]]. x is drawn from [1..10] and for every element in
+-- [1..10] (which we have bound to x), we get that element, only doubled.
+-- Here's that comprehension in action.
