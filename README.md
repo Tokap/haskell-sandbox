@@ -8,4 +8,7 @@ Monday
   * Start Chapter 3
 
 Tuesday
-  * Continue Chapter 3
+  * Continue/Complete Chapter 3
+
+Wednesday
+  * Chapter 4
