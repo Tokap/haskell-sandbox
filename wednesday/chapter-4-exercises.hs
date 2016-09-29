@@ -18,11 +18,19 @@
 
 ---------------- Exercise 4.1.3 (First Excercise Box) -------------------------
 
--- Do the thing.
+-- Final result in PrintFirst.hs
 
 ---------------- Exercise 4.1.4 (First Excercise Box) -------------------------
 
--- Do the thing.
+-- OUTLINE:
+
+-- Transpose a text file very similar to the way that
+-- built in functions handle combining two lists. Each new list is a new line.
+
+-- going to use: zip for this process
+-- First, convert text lines into something useable like in prior exercise
+-- Then, take these lists and zip them
+-- Finally, place results into the (original?) text file
 
 
 
