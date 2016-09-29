@@ -36,5 +36,21 @@
 ------------ Exercise 4.2.1 & 4.2.2 (Second Excercise Box) ---------------------
 
 -- Rewrite asInt using a fold
+-- Answer in PartDeux.hs
+
+-- A PIECE OF EXAMPLE CODE FROM "LEARN ME A GOOD...":
+-- -- Clever Sum
+-- sum' :: (Num a) => [a] -> a
+-- sum' xs = foldl (\acc x -> acc + x) 0 xs
 
 ---------------- Exercise 4.2.3 (Second Excercise Box) -------------------------
+
+-- 314159265358979323846 -> 21 characters. Errors begin at 20
+-- Add error handling to main file in PartDeux.hs
+-- Added to PartDeux.hs
+
+---------------- Exercise 4.2.4 (Second Excercise Box) -------------------------
+-- book has typo in instructions and has not introduced the type "Either" at
+-- this point. Should look like:
+-- type ErrorMessage = String
+-- asInt_either :: String -> Either ErrorMessage Int
