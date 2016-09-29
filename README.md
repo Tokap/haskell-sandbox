@@ -16,3 +16,5 @@ Wednesday
 
 Wednesday
   * Chapter 4 (Continue)
+  * Encounter exercises requiring knowledge not yet covered
+  * Return to Expanded Resources for review
