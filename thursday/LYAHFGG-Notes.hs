@@ -114,4 +114,28 @@ ghci> :t (==)
 ----- Some tuple list comprehension
 ghci> let xs = [(1,3), (4,3), (2,4), (5,3), (5,6), (3,1)]
 ghci> [a+b | (a,b) <- xs]
-[4,7,6,8,11,4]   
+[4,7,6,8,11,4]
+
+-- (x:xs) NOTES:
+-- Note: The x:xs pattern is used a lot, especially with recursive functions.
+-- But patterns that have : in them only match against lists of length 1 or more.
+
+---------- AS PATTERNS -----------
+-- can refer to the parts OR the whole easily with this:
+xs@(x:y:ys)
+
+--- "Quick and Dirty" Example from Site:
+capital :: String -> String
+capital "" = "Empty string, whoops!"
+capital all@(x:xs) = "The first letter of " ++ all ++ " is " ++ [x]
+-- RESULT:
+ghci> capital "Dracula"
+"The first letter of Dracula is D"
+
+------- USING GUARDS -------------
+bmiTell :: (RealFloat a) => a -> String
+bmiTell bmi
+    | bmi <= 18.5 = "You're underweight, you emo, you!"
+    | bmi <= 25.0 = "You're supposedly normal. Pffft, I bet you're ugly!"
+    | bmi <= 30.0 = "You're fat! Lose some weight, fatty!"
+    | otherwise   = "You're a whale, congratulations!"  
