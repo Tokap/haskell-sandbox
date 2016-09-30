@@ -138,4 +138,65 @@ bmiTell bmi
     | bmi <= 18.5 = "You're underweight, you emo, you!"
     | bmi <= 25.0 = "You're supposedly normal. Pffft, I bet you're ugly!"
     | bmi <= 30.0 = "You're fat! Lose some weight, fatty!"
-    | otherwise   = "You're a whale, congratulations!"  
+    | otherwise   = "You're a whale, congratulations!"
+
+-- Guards & Patterns working together in harmony:
+
+-- Many times, the last guard is otherwise. otherwise is defined simply as
+-- otherwise = True and catches everything. This is very similar to patterns,
+-- only they check if the input satisfies a pattern but guards check for boolean
+-- conditions. If all the guards of a function evaluate to False (and we haven't
+-- provided an otherwise catch-all guard), evaluation falls through to the next
+-- pattern. That's how patterns and guards play nicely together. If no suitable
+-- guards or patterns are found, an error is thrown.
+
+
+-- A little guard example (DIY compare function):
+
+myCompare :: (Ord a) => a -> a -> Ordering
+a `myCompare` b
+   | a > b     = GT
+   | a == b    = EQ
+   | otherwise = LT
+
+---------- USING WHERE -----------
+bmiTell :: (RealFloat a) => a -> a -> String
+bmiTell weight height
+    | bmi <= 18.5 = "You're underweight, you emo, you!"
+    | bmi <= 25.0 = "You're supposedly normal. Pffft, I bet you're ugly!"
+    | bmi <= 30.0 = "You're fat! Lose some weight, fatty!"
+    | otherwise   = "You're a whale, congratulations!"
+    where bmi = weight / height ^ 2
+
+-- Pair matching with where:
+where bmi = weight / height ^ 2
+      (skinny, normal, fat) = (18.5, 25.0, 30.0)
+
+----------- LET VS WHERE -----------------
+-- let bindings - expressions themselves.
+-- where bindings - just syntactic constructs.
+
+-- Where bindings are a syntactic construct that let you bind to variables at
+-- the end of a function and the whole function can see them, including all the
+-- guards. Let bindings let you bind to variables anywhere and are expressions
+-- themselves, but are very local, so they don't span across guards.
+
+------- Some Let examples:
+ghci> [if 5 > 3 then "Woo" else "Boo", if 'a' > 'b' then "Foo" else "Bar"]
+["Woo", "Bar"]
+ghci> 4 * (if 10 > 5 then 10 else 0) + 2
+42
+
+-- They can also be used to introduce functions in a local scope:
+ghci> [let square x = x * x in (square 5, square 3, square 2)]
+[(25,9,4)]
+
+-- If we want to bind to several variables inline, we obviously can't align them
+-- at columns. That's why we can separate them with semicolons.
+ghci> (let a = 100; b = 200; c = 300 in a*b*c, let foo="Hey "; bar = "there!" in foo ++ bar)
+(6000000,"Hey there!")
+
+-- You can pattern match with let bindings. They're very useful for quickly
+-- dismantling a tuple into components and binding them to names and such.
+ghci> (let (a,b,c) = (1,2,3) in a+b+c) * 100
+600
