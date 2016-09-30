@@ -200,3 +200,63 @@ ghci> (let a = 100; b = 200; c = 300 in a*b*c, let foo="Hey "; bar = "there!" in
 -- dismantling a tuple into components and binding them to names and such.
 ghci> (let (a,b,c) = (1,2,3) in a+b+c) * 100
 600
+
+-- BMI with let:
+calcBmis :: (RealFloat a) => [(a, a)] -> [a]
+calcBmis xs = [bmi | (w, h) <- xs, let bmi = w / h ^ 2]
+
+-- Let being used like a predicate:
+
+-- We include a let inside a list comprehension much like we would a predicate,
+-- only it doesn't filter the list, it only binds to names. The names defined in
+-- a let inside a list comprehension are visible to the output function (the part
+-- before the |) and all predicates and sections that come after of the binding.
+-- So we could make our function return only the BMIs of fat people:
+calcBmis :: (RealFloat a) => [(a, a)] -> [a]
+calcBmis xs = [bmi | (w, h) <- xs, let bmi = w / h ^ 2, bmi >= 25.0]
+
+-- Fun with Let scope:
+ghci> let zoot x y z = x * y + z
+ghci> zoot 3 9 2
+29
+ghci> let boot x y z = x * y + z in boot 3 4 2
+14
+ghci> boot
+<interactive>:1:0: Not in scope: `boot'
+
+
+-------- CASE EXPRESSIONS ----------------------
+-- These two pieces of code do the same thing and are interchangeable:
+head' :: [a] -> a
+head' [] = error "No head for empty lists!"
+head' (x:_) = x
+
+head' :: [a] -> a
+head' xs = case xs of [] -> error "No head for empty lists!"
+                      (x:_) -> x
+
+-- Basic Syntax:
+case expression of pattern -> result
+                   pattern -> result
+                   pattern -> result
+                   ...
+
+-- So if this is like a pattern match, why use it?
+
+-- Whereas pattern matching on function parameters can only be done when defining
+-- functions, case expressions can be used pretty much anywhere. For instance:
+
+describeList :: [a] -> String
+describeList xs = "The list is " ++ case xs of [] -> "empty."
+                                               [x] -> "a singleton list."
+                                               xs -> "a longer list."
+
+-- They are useful for pattern matching against something in the middle of an
+-- expression. Because pattern matching in function definitions is syntactic
+-- sugar for case expressions, we could have also defined this like so:
+
+describeList :: [a] -> String
+describeList xs = "The list is " ++ what xs
+   where what [] = "empty."
+         what [x] = "a singleton list."
+         what xs = "a longer list."

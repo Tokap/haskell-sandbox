@@ -17,4 +17,5 @@ Wednesday
 Wednesday
   * Chapter 4 (Continue)
   * Encounter exercises requiring knowledge not yet covered
-  * Return to Expanded Resources for review
+  * Return to Expanded Resources for review & extensive notes
+  * Complete first 3 chapters of "Learn You a Haskell..."
