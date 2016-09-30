@@ -51,3 +51,8 @@ ghci> [ x | x <- [10..20], x /= 13, x /= 15, x /= 19]
 ghci> [ x*y | x <- [2,5,10], y <- [8,10,11]]
 [16,20,22,40,50,55,80,100,110]
 --------------------------------------------------------------------------------
+------ MAKE YOUR OWN LENGTH:
+length' xs = sum [1 | _ <- xs]
+-- replaces each instance of the array with 1 (we draw out a blank because we
+-- do not care what the item is, it's just gonna become 1). Then we get the
+-- total of all of those 1s.
