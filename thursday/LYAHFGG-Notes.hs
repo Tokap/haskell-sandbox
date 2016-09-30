@@ -56,3 +56,30 @@ length' xs = sum [1 | _ <- xs]
 -- replaces each instance of the array with 1 (we draw out a blank because we
 -- do not care what the item is, it's just gonna become 1). Then we get the
 -- total of all of those 1s.
+
+------ REMOVE THINGS NOT IN TARGET LIST (In this case, cap letters):
+removeNonUppercase st = [ c | c <- st, c `elem` ['A'..'Z']]
+
+------ FINDING RIGHT TRIANGLES:
+ghci> let rightTriangles = [ (a,b,c) | c <- [1..10], b <- [1..c], a <- [1..b], a^2 + b^2 == c^2]
+
+
+
+------------------ TYPES AND TYPE CLASSES --------------------------------------
+-- :: is read as "has type of".
+-- Explicitly declaring type for our own functions is generally considered to be
+-- good practice except when writing very short functions.
+
+-- Int (Limited)
+-- Integer (Unlimited)
+-- Float
+-- Double (better than float)
+-- Bool
+-- Char
+
+ghci> :t (==)
+(==) :: (Eq a) => a -> a -> Bool  
+-- Everything before the => symbol is called a class constraint. We can read the
+-- previous type declaration like this: the equality function takes any two values
+-- that are of the same type and returns a Bool. The type of those two values
+-- must be a member of the Eq class (this was the class constraint).
