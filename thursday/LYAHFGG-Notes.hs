@@ -77,6 +77,9 @@ ghci> let rightTriangles = [ (a,b,c) | c <- [1..10], b <- [1..c], a <- [1..b], a
 -- Bool
 -- Char
 
+
+-- For the below, just remember anything to the left of the => is for class
+-- constraints. This area can support multiple restraints, separated by commas.
 ghci> :t (==)
 (==) :: (Eq a) => a -> a -> Bool
 -- Everything before the => symbol is called a class constraint. We can read the
@@ -96,7 +99,7 @@ ghci> :t (==)
 
 ---- From Integral and you:
 
--- fromIntegral - It has a type declaration of: 
+-- fromIntegral - It has a type declaration of:
 --   fromIntegral :: (Num b, Integral a) => a -> b.
 -- From its type signature we see that it takes an integral number and turns it
 -- into a more general number. That's useful when you want integral and floating
@@ -107,3 +110,8 @@ ghci> :t (==)
 -- get a length of a list and then add it to 3.2, we'll get an error because we
 -- tried to add together an Int and a floating point number. So to get around
 -- this, we do fromIntegral (length [1,2,3,4]) + 3.2 and it all works out.
+
+----- Some tuple list comprehension
+ghci> let xs = [(1,3), (4,3), (2,4), (5,3), (5,6), (3,1)]
+ghci> [a+b | (a,b) <- xs]
+[4,7,6,8,11,4]   
