@@ -78,8 +78,32 @@ ghci> let rightTriangles = [ (a,b,c) | c <- [1..10], b <- [1..c], a <- [1..b], a
 -- Char
 
 ghci> :t (==)
-(==) :: (Eq a) => a -> a -> Bool  
+(==) :: (Eq a) => a -> a -> Bool
 -- Everything before the => symbol is called a class constraint. We can read the
 -- previous type declaration like this: the equality function takes any two values
 -- that are of the same type and returns a Bool. The type of those two values
 -- must be a member of the Eq class (this was the class constraint).
+
+------ Basic Typeclasses:
+-- Eq - used for types that support equality testing.
+-- Ord - for types that have an ordering.
+    -- Ord covers all the standard comparing functions such as >, <, >= and <=.
+    -- The compare function takes two Ord members of the same type and returns
+    -- an ordering. Ordering is a type that can be GT, LT or EQ, meaning greater
+    -- than, lesser than and equal, respectively.
+    -- EX: ghci> "Abrakadabra" `compare` "Zebra"  => LT
+    -- EX: ghci> 5 `compare` 3  => GT
+
+---- From Integral and you:
+
+-- fromIntegral - It has a type declaration of: 
+--   fromIntegral :: (Num b, Integral a) => a -> b.
+-- From its type signature we see that it takes an integral number and turns it
+-- into a more general number. That's useful when you want integral and floating
+-- point types to work together nicely. For instance, the length function has a
+-- type declaration of length :: [a] -> Int instead of having a more general type
+-- of (Num b) => length :: [a] -> b. I think that's there for historical reasons
+-- or something, although in my opinion, it's pretty stupid. Anyway, if we try to
+-- get a length of a list and then add it to 3.2, we'll get an error because we
+-- tried to add together an Int and a floating point number. So to get around
+-- this, we do fromIntegral (length [1,2,3,4]) + 3.2 and it all works out.
