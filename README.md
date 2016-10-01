@@ -14,8 +14,11 @@ Wednesday
   * Chapter 4 (Start)
   * Expand Resources (Learn You a Haskell for Great Good!)
 
-Wednesday
+Thursday
   * Chapter 4 (Continue)
   * Encounter exercises requiring knowledge not yet covered
   * Return to Expanded Resources for review & extensive notes
   * Complete first 3 chapters of "Learn You a Haskell..."
+
+Friday
+  * Complete up to chapter 9 of "Learn You a Haskell..." (5 total reviewed)
