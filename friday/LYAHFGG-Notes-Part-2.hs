@@ -232,9 +232,40 @@ treeInsert x (Node a left right)
     | x < a  = Node a (treeInsert x left) right
     | x > a  = Node a left (treeInsert x right)
 
-treeElem :: (Ord a) => a -> Tree a -> Bool  
+treeElem :: (Ord a) => a -> Tree a -> Bool
 treeElem x EmptyTree = False
 treeElem x (Node a left right)
     | x == a = True
     | x < a  = treeElem x left
     | x > a  = treeElem x right
+
+-------------------------------- INSTANCES -------------------------------------
+instance Eq TrafficLight where
+    Red == Red = True
+    Green == Green = True
+    Yellow == Yellow = True
+    _ == _ = False
+-- So class is for defining new typeclasses and instance is for
+-- making our types instances of typeclasses.
+
+instance Show TrafficLight where
+    show Red = "Red light"
+    show Yellow = "Yellow light"
+    show Green = "Green light"
+
+
+----- Implementing a JS-like yes/no system
+instance YesNo Int where
+    yesno 0 = False
+    yesno _ = True
+instance YesNo [a] where
+    yesno [] = False
+    yesno _ = True
+instance YesNo Bool where
+    yesno = id -- this just returns whatever Bool value was plugged in
+instance YesNo (Maybe a) where
+    yesno (Just _) = True
+    yesno Nothing = False
+---- What is ID?
+-- id? It's just a standard library function that takes a parameter and returns
+-- the same thing, which is what we would be writing here anyway.
