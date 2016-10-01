@@ -269,3 +269,38 @@ instance YesNo (Maybe a) where
 ---- What is ID?
 -- id? It's just a standard library function that takes a parameter and returns
 -- the same thing, which is what we would be writing here anyway.
+
+----------------------------- THE FUNCTOR TYPECLASS ----------------------------
+-- Compares a functor to a box holding values?
+-- Functor - basically for things that can be mapped over.
+-- Lists are part of the Functor typeclass
+-- map is just a fmap that works only on lists
+instance Functor [] where
+    fmap = map
+    Here's how Maybe is a functor.
+
+instance Functor Maybe where
+    fmap f (Just x) = Just (f x)
+    fmap f Nothing = Nothing
+
+-- Functor wants a type constructor that takes one type and not a concrete type.
+-- If you mentally replace the fs with Maybes, fmap acts like
+-- a (a -> b) -> Maybe a -> Maybe b for this particular type, which looks OK.
+-- But if you replace f with (Maybe m), then it would seem to act like
+-- a (a -> b) -> Maybe m a -> Maybe m b, which doesn't make any damn sense
+-- because Maybe takes just one type parameter.
+ghci> fmap (++ " HEY GUYS IM INSIDE THE JUST") (Just "Something serious.")
+Just "Something serious. HEY GUYS IM INSIDE THE JUST"
+ghci> fmap (++ " HEY GUYS IM INSIDE THE JUST") Nothing
+Nothing
+ghci> fmap (*2) (Just 200)
+Just 400
+ghci> fmap (*2) Nothing
+Nothing
+
+--- Functors have laws and rules they hold to which will be discussed later
+
+
+------------ SOME QUICK NOTES ON KINDS ------------------------
+-- Types have their own little labels, called kinds. A kind is more or less 
+-- the type of a type.
