@@ -121,3 +121,85 @@ hello sir
 hello
 
 -- prints until it hits a space
+
+
+------------------ THE WHEN FUNCTION ----------------
+-- The when function is found in Control.Monad (to get access to it, do
+-- import Control.Monad). It's interesting because in a do block it looks
+-- like a control flow statement, but it's actually a normal function. It
+-- takes a boolean value and an I/O action if that boolean value is True,
+-- it returns the same I/O action that we supplied to it. However, if it's
+-- False, it returns the return (), action, so an I/O action that doesn't
+-- do anything.
+
+import Control.Monad
+
+main = do
+    c <- getChar
+    when (c /= ' ') $ do
+        putChar c
+        main
+
+-- it's useful for encapsulating the if something then do some
+-- I/O action else return () pattern.
+
+------------------ SEQUENCE ----------------
+-- Takes a list of I/O actions and returns an I/O action that will perform
+-- those actions one after the other. The result contained in that I/O action
+-- will be a list of the results of all the I/O actions that were performed.
+-- Its type signature is -
+sequence :: [IO a] -> IO [a]. Doing this:
+
+main = do
+    a <- getLine
+    b <- getLine
+    c <- getLine
+    print [a,b,c]
+-- Is exactly the same as doing this:
+
+main = do
+    rs <- sequence [getLine, getLine, getLine]
+    print rs
+-- So sequence [getLine, getLine, getLine] makes an I/O action that
+-- will perform getLine three times. A common pattern with sequence is when
+-- we map functions like print or putStrLn over lists.
+ghci> sequence (map print [1,2,3,4,5])
+1
+2
+3
+4
+5
+[(),(),(),(),()]
+
+---------------------------- mapM & mapM_ -------------------------------------
+-- Because mapping a function that returns an I/O action over a list and then
+-- sequencing it is so common, the utility functions mapM and mapM_
+
+-- mapM takes a function and a list, maps the function over the list and then
+-- sequences it. mapM_ does the same, only it throws away the result later.
+-- We usually use mapM_ when we don't care what result our sequenced I/O a
+-- ctions have.
+
+ghci> mapM print [1,2,3]
+1
+2
+3
+[(),(),()]
+ghci> mapM_ print [1,2,3]
+1
+2
+3
+
+---------------------------- forever -------------------------------------
+-- forever takes an I/O action and returns an I/O action that just repeats the
+-- I/O action it got forever. It's located in Control.Monad. This little program
+-- will indefinitely ask the user for some input and spit it back to him,
+-- CAPSLOCKED:
+
+import Control.Monad
+import Data.Char
+
+main = forever $ do
+    putStr "Give me some input: "
+    l <- getLine
+    putStrLn $ map toUpper l
