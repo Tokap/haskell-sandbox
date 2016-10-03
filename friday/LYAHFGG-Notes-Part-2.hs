@@ -300,7 +300,23 @@ Nothing
 
 --- Functors have laws and rules they hold to which will be discussed later
 
-
 ------------ SOME QUICK NOTES ON KINDS ------------------------
--- Types have their own little labels, called kinds. A kind is more or less 
+-- Types have their own little labels, called kinds. A kind is more or less
 -- the type of a type.
+
+ghci> :k Int
+Int :: *
+-- A * means that the type is a concrete type.
+
+ghci> :k Maybe
+Maybe :: * -> *
+-- The Maybe type constructor takes one concrete type (like Int) and then
+-- returns a concrete type like Maybe Int.
+
+ghci> :k Maybe Int
+Maybe Int :: *
+
+ghci> :k Either
+Either :: * -> * -> *
+-- Aha, this tells us that Either takes two concrete types as type
+-- parameters to produce a concrete type.
