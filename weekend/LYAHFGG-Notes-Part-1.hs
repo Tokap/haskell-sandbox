@@ -657,3 +657,84 @@ main = do
 -- reads - returns an empty list when it fails to read a string.
 
 ----------------------------------- Bytestrings --------------------------------
+---- STRIC AND LAZY BYTESTRINGS
+
+-- Strict bytestrings reside in Data.ByteString and they do away
+-- with the laziness completely. There are no promises involved; a strict
+-- bytestring represents a series of bytes in an array.
+-- The upside is that there's less overhead because there are no thunks
+-- (the technical term for promise) involved. The downside is that they're likely
+-- to fill your memory up faster because they're read into memory at once.
+
+-- The other variety of bytestrings resides in Data.ByteString.Lazy. They're
+-- lazy, but not quite as lazy as lists. Like we said before, there are as many
+-- thunks in a list as there are elements. That's what makes them kind of slow
+-- for some purposes. Lazy bytestrings take a different approach — they are
+-- stored in chunks (not to be confused with thunks!), each chunk has a size
+-- of 64K.
+
+-- When you process a file with lazy bytestrings, it will be read chunk by chunk.
+-- This is cool because it won't cause the memory usage to skyrocket and the
+-- 64K probably fits neatly into your CPU's L2 cache.
+
+-- Data.ByteString.Lazy & Data.List share a number of function concepts
+
+import qualified Data.ByteString.Lazy as B
+import qualified Data.ByteString as S
+-- B has lazy bytestring types and functions, whereas S has strict ones.
+-- We'll mostly be using the lazy version.
+
+
+------ pack
+-- The function pack has the type signature pack :: [Word8] -> ByteString.
+-- What that means is that it takes a list of bytes of type Word8 and returns a
+-- ByteString. You can think of it as taking a list, which is lazy, and making
+-- it less lazy, so that it's lazy only at 64K intervals.
+
+-- What's the deal with that Word8 type? Well, it's like Int,
+-- only that it has a much smaller range, namely 0-255.
+
+-- unpack is the inverse function of pack. It takes a bytestring and turns it
+-- into a list of bytes.
+
+-- fromChunks takes a list of strict bytestrings and converts it to a lazy
+-- bytestring. toChunks takes a lazy bytestring and converts it to a list
+-- of strict ones.
+
+-- The bytestring version of : is called cons It takes a byte and a bytestring
+-- and puts the byte at the beginning.
+
+-- it's better to use the strict version of cons, cons' if you're going to be
+-- inserting a lot of bytes at the beginning of a bytestring.
+ghci> B.cons 85 $ B.pack [80,81,82,84]
+Chunk "U" (Chunk "PQRT" Empty)
+ghci> B.cons' 85 $ B.pack [80,81,82,84]
+Chunk "UPQRT" Empty
+ghci> foldr B.cons B.empty [50..60]
+Chunk "2" (Chunk "3" (Chunk "4" (Chunk "5" (Chunk "6" (Chunk "7" (Chunk "8" (Chunk "9" (Chunk ":" (Chunk ";" (Chunk "<"
+Empty))))))))))
+ghci> foldr B.cons' B.empty [50..60]
+Chunk "23456789:;<" Empty
+
+-- empty makes an empty bytestring
+-- See the difference between cons and cons'? With the foldr, we started with an
+-- empty bytestring and then went over the list of numbers from the right, adding
+-- each number to the beginning of the bytestring. When we used cons, we ended up
+-- with one chunk for every byte, which kind of defeats the purpose.
+
+----- Bytestring modules have a ton of analogous Data.List functions, including:
+-- head, tail, init, null, length, map, reverse, foldl, foldr, concat,
+-- takeWhile, filter, etc.
+
+---- Also has readFile equivalents that return ByteStrings
+
+
+------ WHEN TO USE BYTESTRINGS? ------------
+-- Whenever you need better performance in a program that reads a lot of data
+-- into strings, give bytestrings a try, chances are you'll get some good
+-- performance boosts with very little effort on your part. I usually write
+-- programs by using normal strings and then convert them to use bytestrings
+-- if the performance is not satisfactory.
+
+------------ HANDLING EXCEPTIONS ---------------
+doesFileExist function from System.Directory.
