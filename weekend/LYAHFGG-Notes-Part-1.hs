@@ -203,3 +203,65 @@ main = forever $ do
     putStr "Give me some input: "
     l <- getLine
     putStrLn $ map toUpper l
+
+-------------------------- forM & Lambdas -----------------------------------
+-- You can think of forM as meaning: make an I/O action for every element
+-- in this list.
+import Control.Monad
+
+main = do
+    colors <- forM [1,2,3,4] (\a -> do
+        putStrLn $ "Which color do you associate with the number " ++ show a ++ "?"
+        color <- getLine
+        return color)
+    putStrLn "The colors that you associate with 1, 2, 3 and 4 are: "
+    mapM putStrLn colors
+-- The (\a -> do ... ) is a function that takes a number and returns an I/O
+-- action. We have to surround it with parentheses, otherwise the lambda thinks
+-- the last two I/O actions belong to it. Notice that we do return color in the
+-- inside do block. We do that so that the I/O action which the do block defines
+-- has the result of our color contained within it. We actually didn't have to
+-- do that, because getLine already has that contained within it. Doing color
+-- <- getLine and then return color is just unpacking the result from getLine
+-- and then repackaging it again, so it's the same as just doing getLine. The
+-- forM (called with its two parameters) produces an I/O action, whose result we
+-- bind to colors. colors is just a normal list that holds strings. At the end,
+-- we print out all those colors by doing mapM putStrLn colors.
+
+
+-- We could have actually done that without forM, only with forM it's more
+-- readable. Normally we write forM when we want to map and sequence some
+-- actions that we define there on the spot using do notation. In the same
+-- vein, we could have replaced the last line with forM colors putStrLn.
+
+------------------ getContents ------------------------------------
+-- getContents is an I/O action that reads everything from the standard input
+-- until it encounters an end-of-file character.
+
+-- getContents is really useful when we're piping the output from one program
+-- into the input of our program.
+
+------ Using pipes:
+$ ghc --make capslocker
+[1 of 1] Compiling Main             ( capslocker.hs, capslocker.o )
+Linking capslocker ...
+$ cat haiku.txt
+I'm a lil' teapot
+What's with that airplane food, huh?
+It's so small, tasteless
+$ cat haiku.txt | ./capslocker
+I'M A LIL' TEAPOT
+WHAT'S WITH THAT AIRPLANE FOOD, HUH?
+IT'S SO SMALL, TASTELESS
+capslocker <stdin>: hGetLine: end of file
+
+-- to escape a forever loop in the terminal - pressing Ctrl-D
+
+-- This pattern of getting some string from the input, transforming it with a
+-- function and then outputting that is so common that there exists a function
+-- which makes that even easier, called interact
+
+--------------------- Interact --------------------------
+-- interact takes a function of type String -> String as a parameter and returns 
+-- an I/O action that will take some input, run that function on it and then
+-- print out the function's result.
