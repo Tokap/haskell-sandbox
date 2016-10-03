@@ -737,4 +737,69 @@ Chunk "23456789:;<" Empty
 -- if the performance is not satisfactory.
 
 ------------ HANDLING EXCEPTIONS ---------------
-doesFileExist function from System.Directory.
+-- doesFileExist function from System.Directory.
+-- -> Then use conditional flow with results
+-- OR
+-- catch function from System.IO.Error
+catch :: IO a -> (IOError -> IO a) -> IO a
+
+-- It takes two parameters. The first one is an I/O action. For instance, it
+-- could be an I/O action that tries to open a file. The second one is the
+-- so-called handler. If the first I/O action passed to catch throws an I/O
+-- exception, that exception gets passed to the handler, which then decides
+-- what to do. The handler takes a value of type IOError
+import System.Environment
+import System.IO
+import System.IO.Error
+
+main = toTry `catch` handler
+
+toTry :: IO ()
+toTry = do (fileName:_) <- getArgs
+           contents <- readFile fileName
+           putStrLn $ "The file has " ++ show (length (lines contents)) ++ " lines!"
+
+handler :: IOError -> IO ()
+handler e = putStrLn "Whoops, had some trouble!"
+
+$ runhaskell count_lines.hs i_exist.txt
+The file has 3 lines!
+
+$ runhaskell count_lines.hs i_dont_exist.txt
+Whoops, had some trouble!
+
+---- HANDLING SPECIFIC KINDS OF EXCEPTIONS:
+import System.Environment
+import System.IO
+import System.IO.Error
+
+main = toTry `catch` handler
+
+toTry :: IO ()
+toTry = do (fileName:_) <- getArgs
+           contents <- readFile fileName
+           putStrLn $ "The file has " ++ show (length (lines contents)) ++ " lines!"
+
+handler :: IOError -> IO ()
+handler e
+    | isDoesNotExistError e = putStrLn "The file doesn't exist!"
+    | otherwise = ioError e
+
+-- There are several predicates that act on IOError and if a guard doesn't
+-- evaluate to True, evaluation falls through to the next guard. The
+-- predicates that act on IOError are:
+-- isAlreadyExistsError
+-- isDoesNotExistError
+-- isAlreadyInUseError
+-- isFullError
+-- isEOFError
+-- isIllegalOperation
+-- isPermissionError
+-- isUserError
+
+handler :: IOError -> IO ()
+handler e
+    | isDoesNotExistError e = putStrLn "The file doesn't exist!"
+    | isFullError e = freeSomeSpace
+    | isIllegalOperation e = notifyCops
+    | otherwise = ioError e  
