@@ -403,5 +403,257 @@ import System.IO
 main = do
     contents <- readFile "girlfriend.txt"
     putStr contents
--- Because we don't get a handle with which to identify our file, we can't close 
+-- Because we don't get a handle with which to identify our file, we can't close
 -- it manually, so Haskell does that for us when we use readFile.
+
+-- writeFile
+writeFile :: FilePath -> String -> IO ()
+-- It takes a path to a file and a string to write to that file and returns an
+-- I/O action that will do the writing. If such a file already exists, it will
+-- be stomped down to zero length before being written on.
+------- EXAMPLE:
+import System.IO
+import Data.Char
+
+main = do
+    contents <- readFile "girlfriend.txt"
+    writeFile "girlfriendcaps.txt" (map toUpper contents)
+
+$ runhaskell girlfriendtocaps.hs
+$ cat girlfriendcaps.txt
+HEY! HEY! YOU! YOU!
+I DON'T LIKE YOUR GIRLFRIEND!
+NO WAY! NO WAY!
+I THINK YOU NEED A NEW ONE!
+
+------- STANDARD APPEND VS WRITE. APPEND WILL ADD, WRITE OVERWRITES
+-- appendFile has a type signature that's just like writeFile, only appendFile
+-- doesn't truncate the file to zero length if it already exists but it appends
+-- stuff to it.
+
+----------- INTERESTNG NOTES CONCERNING LAZY PROCESSING ------------------------
+Ooh, one more thing. We talked about how doing contents <- hGetContents handle doesn't cause the whole file to be read at once and stored in-memory. It's I/O lazy, so doing this:
+
+main = do
+    withFile "something.txt" ReadMode (\handle -> do
+        contents <- hGetContents handle
+        putStr contents)
+-- is actually like connecting a pipe from the file to the output. Just like you
+-- can think of lists as streams, you can also think of files as streams. This
+-- will read one line at a time and print it out to the terminal as it goes
+-- along. So you may be asking, how wide is this pipe then? How often will the
+-- disk be accessed? Well, for text files, the default buffering is
+-- line-buffering usually. That means that the smallest part of the file to be
+-- read at once is one line. That's why in this case it actually reads a line,
+-- prints it to the output, reads the next line, prints it, etc. For binary
+-- files, the default buffering is usually block-buffering. That means that it
+-- will read the file chunk by chunk. The chunk size is some size that your
+-- operating system thinks is cool.
+
+---------------------- CONTROLLING BUFFERING FLOW ------------------------------
+-- You can control how exactly buffering is done by using the hSetBuffering
+-- function. It takes a handle and a BufferMode and returns an I/O action that
+-- sets the buffering. BufferMode is a simple enumeration data type and the
+-- possible values it can hold are: NoBuffering, LineBuffering or BlockBuffering
+-- (Maybe Int). The Maybe Int is for how big the chunk should be, in bytes. If
+-- it's Nothing, then the operating system determines the chunk size.
+-- NoBuffering means that it will be read one character at a time. NoBuffering
+-- usually sucks as a buffering mode because it has to access the disk so much.
+
+-- hFlush - we can use hFlush to force that reporting of data that has been
+-- read so far. After flushing, the data is available to other programs that are
+-- running at the same time.
+
+--------------------------- EDITING A FILE -------------------------------------
+import System.IO
+import System.Directory
+import Data.List
+
+main = do
+    handle <- openFile "todo.txt" ReadMode
+    (tempName, tempHandle) <- openTempFile "." "temp"
+    contents <- hGetContents handle
+    let todoTasks = lines contents
+        numberedTasks = zipWith (\n line -> show n ++ " - " ++ line) [0..] todoTasks
+    putStrLn "These are your TO-DO items:"
+    putStr $ unlines numberedTasks
+    putStrLn "Which one do you want to delete?"
+    numberString <- getLine
+    let number = read numberString
+        newTodoItems = delete (todoTasks !! number) todoTasks
+    hPutStr tempHandle $ unlines newTodoItems
+    hClose handle
+    hClose tempHandle
+    removeFile "todo.txt"
+    renameFile tempName "todo.txt"
+
+
+-- The reason we didn't use getCurrentDirectory to get the current directory and
+-- then pass it to openTempFile but instead just passed "." to openTempFile is
+-- because . refers to the current directory on unix-like system and Windows
+
+-- removeFile, which, as you can see, takes a path to a file and deletes it.
+-- renameFile to rename the temporary file to todo.txt.
+---- WARNING:
+-- Be careful, removeFile and renameFile (which are both in System.Directory
+-- by the way) take file paths as their parameters, not handles.
+
+-------------------- ARGUMENTS ----------------------------
+-- The System.Environment module has two cool I/O actions:
+-- getArgs, which has a type of getArgs :: IO [String] and is an I/O action that
+-- will get the arguments that the program was run with and have as its contained
+-- result a list with the arguments.
+
+-- getProgName has a type of getProgName :: IO String and is an I/O action
+-- that contains the program name.
+
+---------------- APPLICATION EXAMPLE ------------------------------
+-- We'll call it simply todo and it'll be able to do three different things:
+
+-- View tasks
+-- Add tasks
+-- Delete tasks
+
+
+import System.Environment
+import System.Directory
+import System.IO
+import Data.List
+
+dispatch :: [(String, [String] -> IO ())]
+dispatch =  [ ("add", add)
+            , ("view", view)
+            , ("remove", remove)
+            ]
+
+main = do
+    (command:args) <- getArgs
+    let (Just action) = lookup command dispatch
+    action args
+
+add :: [String] -> IO ()
+add [fileName, todoItem] = appendFile fileName (todoItem ++ "\n")
+
+view :: [String] -> IO ()
+view [fileName] = do
+    contents <- readFile fileName
+    let todoTasks = lines contents
+        numberedTasks = zipWith (\n line -> show n ++ " - " ++ line) [0..] todoTasks
+    putStr $ unlines numberedTasks
+
+remove :: [String] -> IO ()
+remove [fileName, numberString] = do
+    handle <- openFile fileName ReadMode
+    (tempName, tempHandle) <- openTempFile "." "temp"
+    contents <- hGetContents handle
+    let number = read numberString
+        todoTasks = lines contents
+        newTodoItems = delete (todoTasks !! number) todoTasks
+    hPutStr tempHandle $ unlines newTodoItems
+    hClose handle
+    hClose tempHandle
+    removeFile fileName
+    renameFile tempName fileName
+
+---------- FUNCTION SUMMARY:
+-- To summarize our solution: we made a dispatch association that maps from
+-- commands to functions that take some command line arguments and return an
+-- I/O action. We see what the command is and based on that we get the
+-- appropriate function from the dispatch list. We call that function with the
+-- rest of the command line arguments to get back an I/O action that will do the
+-- appropriate thing and then just perform that action!
+
+-------------------- RANDOMNESS --------------------------
+-- System.Random module
+
+-- random
+random :: (RandomGen g, Random a) => g -> (a, g)
+
+ghci> random (mkStdGen 100) :: (Int, StdGen)
+(-1352021624,651872571 1655838864)
+
+ghci> random (mkStdGen 949488) :: (Float, StdGen)
+(0.8938442,1597344447 1655838864)
+ghci> random (mkStdGen 949488) :: (Bool, StdGen)
+(False,1485632275 40692)
+ghci> random (mkStdGen 949488) :: (Integer, StdGen)
+(1691547873,1597344447 1655838864)
+
+---- generating a series of results:
+threeCoins :: StdGen -> (Bool, Bool, Bool)
+threeCoins gen =
+    let (firstCoin, newGen) = random gen
+        (secondCoin, newGen') = random newGen
+        (thirdCoin, newGen'') = random newGen'
+    in  (firstCoin, secondCoin, thirdCoin)
+
+ghci> threeCoins (mkStdGen 21)
+(True,True,True)
+ghci> threeCoins (mkStdGen 22)
+(True,False,True)
+ghci> threeCoins (mkStdGen 943)
+(True,False,True)
+ghci> threeCoins (mkStdGen 944)
+(True,True,True)
+--
+-- Notice that we didn't have to do random gen :: (Bool, StdGen). That's because
+-- we already specified that we want booleans in the type declaration of the
+-- function. That's why Haskell can infer that we want a boolean value in
+-- this case.
+
+-- randoms that takes a generator and returns an infinite sequence of
+-- values based on that generator.
+ghci> take 5 $ randoms (mkStdGen 11) :: [Int]
+[-1807975507,545074951,-1015194702,-1622477312,-502893664]
+ghci> take 5 $ randoms (mkStdGen 11) :: [Bool]
+[True,True,True,True,False]
+ghci> take 5 $ randoms (mkStdGen 11) :: [Float]
+[7.904789e-2,0.62691015,0.26363158,0.12223756,0.38291094]
+
+-- randomR : random value within a range
+randomR :: (RandomGen g, Random a) :: (a, a) -> g -> (a, g
+
+ghci> randomR (1,6) (mkStdGen 359353)
+(6,1494289578 40692)
+ghci> randomR (1,6) (mkStdGen 35935335)
+(3,1250031057 40692)
+
+-- There's also randomRs, which produces a stream of random values within our
+-- defined ranges. Check this out:
+
+ghci> take 10 $ randomRs ('a','z') (mkStdGen 3) :: [Char]
+"ndkxbvmomg"
+
+
+----- How does Haskell do random? ------
+-- System.Random offers the getStdGen I/O action, which has a type of IO StdGen.
+-- When your program starts, it asks the system for a good random number
+-- generator and stores that in a so called global generator. getStdGen fetches
+-- you that global random generator when you bind it to something.
+import System.Random
+
+main = do
+    gen <- getStdGen
+    putStr $ take 20 (randomRs ('a','z') gen)
+
+----- Infinite streams and sampling:
+-- One way to get two different strings of length 20 is to set up an infinite
+-- stream and then take the first 20 characters and print them out in one line
+-- and then take the second set of 20 characters and print them out in the
+-- second line.
+
+
+-- newStdGen action, which splits our current random generator into two
+-- generators. It updates the global random generator with one of them and
+-- encapsulates the other as its result.
+import System.Random
+
+main = do
+    gen <- getStdGen
+    putStrLn $ take 20 (randomRs ('a','z') gen)
+    gen' <- newStdGen
+    putStr $ take 20 (randomRs ('a','z') gen')
+
+-- reads - returns an empty list when it fails to read a string.
+
+----------------------------------- Bytestrings --------------------------------
