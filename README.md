@@ -25,4 +25,5 @@ Friday
 
 Weekend
   * CodeWars challenges
-  * 1 Chapter of Learn You a Haskell
+  * 1 Rather Long Chapter of Learn You a Haskell
+  * (Chapter covered I/O, functional purity, ByteStrings & exception handling)
