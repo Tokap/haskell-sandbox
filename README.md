@@ -22,3 +22,7 @@ Thursday
 
 Friday
   * Complete up to chapter 9 of "Learn You a Haskell..." (5 total reviewed)
+
+Weekend
+  * CodeWars challenges
+  * 1 Chapter of Learn You a Haskell
