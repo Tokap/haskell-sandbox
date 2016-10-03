@@ -1,3 +1,17 @@
+module SimpleJSON
+    (
+      JValue(..),
+      getString,
+      getInt,
+      getDouble,
+      getBool,
+      getObject,
+      getArray,
+      isNull
+    ) where
+
+
+
 data JValue = JString String
             | JNumber Double
             | JBool Bool
@@ -26,3 +40,5 @@ getArray (JArray a) = Just a
 getArray _          = Nothing
 
 isNull v            = v == JNull
+
+-- the resulting files from ghc -c SimpleJSON.hs are an interface file & object file
