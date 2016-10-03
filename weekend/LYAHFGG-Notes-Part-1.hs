@@ -262,6 +262,75 @@ capslocker <stdin>: hGetLine: end of file
 -- which makes that even easier, called interact
 
 --------------------- Interact --------------------------
--- interact takes a function of type String -> String as a parameter and returns 
+-- interact takes a function of type String -> String as a parameter and returns
 -- an I/O action that will take some input, run that function on it and then
 -- print out the function's result.
+
+---- ORIGINAL:
+main = do
+    contents <- getContents
+    putStr (shortLinesOnly contents)
+
+shortLinesOnly :: String -> String
+shortLinesOnly input =
+    let allLines = lines input
+        shortLines = filter (\line -> length line < 10) allLines
+        result = unlines shortLines
+    in  result
+
+---- WITH INTERACT:
+main = interact shortLinesOnly
+
+shortLinesOnly :: String -> String
+shortLinesOnly input =
+    let allLines = lines input
+        shortLines = filter (\line -> length line < 10) allLines
+        result = unlines shortLines
+    in  result
+
+---- SHORTENED WITH FUNCTION CHAINING:
+main = interact $ unlines . filter ((<10) . length) . lines
+
+-- interact can be used to make programs that are piped some contents into them
+-- and then dump some result out or it can be used to make programs that appear
+-- to take a line of input from the user, give back some result based on that
+-- line and then take another line and so on. There isn't actually a real
+-- distinction between the two, it just depends on how the user is supposed
+-- to use them.
+
+--------------------------------------------------------------------------------
+----------- EXAMPLE OF FUNCTIONAL THOUGHT PROCESS FOR AN I/O ACTION ------------
+--------------------------------------------------------------------------------
+-- Let's make a program that continuously reads a line and then tells us if the
+-- line is a palindrome or not. We could just use getLine to read a line, tell
+-- the user if it's a palindrome and then run main all over again. But it's
+-- simpler if we use interact. When using interact, think about what you need to
+-- do to transform some input into the desired output. In our case, we have to
+-- replace each line of the input with either "palindrome" or "not a palindrome".
+-- So we have to write a function that transforms something like
+-- "elephant\nABCBA\nwhatever" into
+-- "not a palindrome\npalindrome\nnot a palindrome".
+
+respondPalindromes contents = unlines (map (\xs -> if isPalindrome xs then "palindrome" else "not a palindrome") (lines contents))
+    where   isPalindrome xs = xs == reverse xs
+-- Point free version:
+respondPalindromes = unlines . map (\xs -> if isPalindrome xs then "palindrome" else "not a palindrome") . lines
+    where   isPalindrome xs = xs == reverse xs
+
+main = interact respondPalindromes
+-- We can also use this program by just piping a file into it.
+-- Let's say we have this file:
+
+dogaroo
+radar
+rotor
+madam
+-- and we save it as words.txt. This is what we get by piping it into our program:
+
+$ cat words.txt | runhaskell palindromes.hs
+not a palindrome
+palindrome
+palindrome
+palindrome
+
+----------------------- WORKING WITH FILES -------------------------------------
