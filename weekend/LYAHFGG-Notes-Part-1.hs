@@ -334,3 +334,74 @@ palindrome
 palindrome
 
 ----------------------- WORKING WITH FILES -------------------------------------
+import System.IO
+
+main = do
+    handle <- openFile "girlfriend.txt" ReadMode
+    contents <- hGetContents handle
+    putStr contents
+    hClose handle
+-- OUTPUT:
+$ runhaskell girlfriend.hs
+Hey! Hey! You! You!
+I don't like your girlfriend!
+No way! No way!
+I think you need a new one!
+
+
+
+-- openFile:
+openFile :: FilePath -> IOMode -> IO Handle
+-- openFile takes a file path and an IOMode and returns an I/O action that will
+-- open a file and have the file's associated handle encapsulated as its result.
+
+-- FilePath is just a type synonym for String, simply defined as:
+type FilePath = String
+
+-- IOMode is a type that's defined like this:
+data IOMode = ReadMode | WriteMode | AppendMode | ReadWriteMode
+
+------------------------ handle & hGetContents ---------------------------
+-- A value of type Handle represents where our file is.
+-- hGetContents - It takes a Handle, so it knows which file to get the contents
+-- from and returns an IO String — an I/O action that holds as its result the
+-- contents of the file.
+-- getContents will automatically read from the standard input (that is from the
+-- terminal), whereas hGetContents takes a file handle which tells it which file
+-- to read from. In all other respects, they work the same.
+
+---------------------- Close the door when you're done -----------------------
+-- hClose, which takes a handle and returns an I/O action that closes the file.
+-- You have to close the file yourself after opening it with openFile!
+
+----- ALTERNATIVELY:
+ -- withFile function, which has a type signature of
+ withFile :: FilePath -> IOMode -> (Handle -> IO a) -> IO a
+ -- It takes a path to a file, an IOMode and then it takes a function that takes
+ -- a handle and returns some I/O action. What it returns is an I/O action that
+ -- will open that file, do something we want with the file and then close it.
+ import System.IO
+
+ main = do
+     withFile "girlfriend.txt" ReadMode (\handle -> do
+         contents <- hGetContents handle
+         putStr contents)
+
+------ Hanlder functions:
+-- hGetLine, hPutStr, hPutStrLn, hGetChar, etc.
+-- They work just like their counterparts without the h, only they take a
+-- handle as a parameter and operate on that specific file instead of operating
+-- on standard input or standard output.
+readFile :: FilePath -> IO String
+
+-- readFile takes a path to a file and returns an I/O action that will read that
+-- file (lazily, of course) and bind its contents to something as a string.
+-- READFILE IS GENERALLY EASIER THAN openFile, bind to handle, hGetContents.
+
+import System.IO
+
+main = do
+    contents <- readFile "girlfriend.txt"
+    putStr contents
+-- Because we don't get a handle with which to identify our file, we can't close 
+-- it manually, so Haskell does that for us when we use readFile.
