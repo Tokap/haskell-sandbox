@@ -27,3 +27,7 @@ Weekend
   * CodeWars challenges
   * 1 Rather Long Chapter of Learn You a Haskell
   * (Chapter covered I/O, functional purity, ByteStrings & exception handling)
+
+Monday
+  * Complete Chapter 5
+  * Create custom JSON reader

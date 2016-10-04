@@ -91,3 +91,9 @@ w `fits` _ | w < 0 = False
 w `fits` ""        = True
 w `fits` ('\n':_)  = True
 w `fits` (c:cs)    = (w - 1) `fits` cs
+
+fill :: Int -> Doc -> Doc
+-- It should add spaces to a document until is is the given number of columns
+-- wide. If it is already wider than this value, it should not add any spaces.
+
+-- then expand this function to deal with indentation of parenthesis and so on.
