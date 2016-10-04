@@ -18,6 +18,7 @@ findEvenIndex :: [Int] -> Int
 findEvenIndex [] = (-1)
 findEvenIndex xs = traverseList 1 xs
 ---------------------------------------------------------------------------------------------------------------------
+
 -- Your task is to make a function that can take any non-negative integer as a
 -- argument and return it with it's digits in descending order. Descending
 -- order means that you take the highest digit and place the next highest
@@ -34,6 +35,7 @@ descendingOrder n | otherwise = read (reverse $ sort (show n)) :: Integer
 -- descendingOrder :: Integer -> Integer
 -- descendingOrder = read . reverse . sort . show
 ---------------------------------------------------------------------------------------------------------------------
+
 -- named with letters from a to m.
 -- s="aaabbbbhaijjjm"
 -- error_printer(s) => "0/14"
@@ -48,3 +50,17 @@ printerError s = concat returnValue
           theSplit = partition (`elem` alpha) s
           glitchMatch = show $ length (snd theSplit)
           returnValue = glitchMatch : "/" : [total]
+---------------------------------------------------------------------------------------------------------------------
+-- a = "xyaabbbccccdefww"
+-- b = "xxxxyyyyabklmopq"
+-- longest(a, b) -> "abcdefklmopqwxy"
+--
+-- a = "abcdefghijklmnopqrstuvwxyz"
+-- longest(a, a) -> "abcdefghijklmnopqrstuvwxyz"
+
+longest :: [Char] -> [Char] -> [Char]
+longest s1 s2 = nub $ sort (s1 ++ s2)
+
+---------------------------------------------------------------------------------------------------------------------
+rowSumOddNumbers :: Integer -> Integer
+rowSumOddNumbers n = sum (drop (fromIntegral ((sum [n,n-1..0]) - n)) (take (fromIntegral (sum [n,n-1..0])) [1,3..]))
