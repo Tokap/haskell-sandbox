@@ -93,17 +93,15 @@ w `fits` ('\n':_)  = True
 w `fits` (c:cs)    = (w - 1) `fits` cs
 
 fill :: Int -> Doc -> Doc
-fill width x = scanLines 0 [x]
-   where scanLines col (d:ds) =
-             case d of
-               Empty         -> best col ds
-               Char c        -> c : best (col + 1) ds
-               Text s        -> s ++ best (col + length s) ds
-               Line          -> '\n' : best 0 ds
-               a `Concat` b  -> best col (a:b:ds)
-               a `Union` b   -> nicest col (best col (a:ds))
-                                           (best col (b:ds))
-         best _ _ = ""
-         nicest col a b | (width - least) `fits` a = a
-                        | otherwise                = b
-                        where least = min width col
+fill width x = hcat (init (scanLines 0 [x <> Line]))
+  where
+    scanLines _ []         = []
+    scanLines col (d:ds) =
+      case d of
+        Empty        -> scanLines col ds
+        Char c       -> Char c : scanLines (col + 1) ds
+        Text s       -> Text s : scanLines (col + length s) ds
+        Line         -> Text (padLine (width - col)) : Line : scanLines 0 ds
+        a `Concat` b -> scanLines col (a:b:ds)
+        _ `Union` b  -> scanLines col (b:ds)
+    padLine w = replicate w ' '
