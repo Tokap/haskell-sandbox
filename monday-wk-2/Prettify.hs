@@ -93,3 +93,17 @@ w `fits` ('\n':_)  = True
 w `fits` (c:cs)    = (w - 1) `fits` cs
 
 fill :: Int -> Doc -> Doc
+fill width x = scanLines 0 [x]
+   where scanLines col (d:ds) =
+             case d of
+               Empty         -> best col ds
+               Char c        -> c : best (col + 1) ds
+               Text s        -> s ++ best (col + length s) ds
+               Line          -> '\n' : best 0 ds
+               a `Concat` b  -> best col (a:b:ds)
+               a `Union` b   -> nicest col (best col (a:ds))
+                                           (best col (b:ds))
+         best _ _ = ""
+         nicest col a b | (width - least) `fits` a = a
+                        | otherwise                = b
+                        where least = min width col
