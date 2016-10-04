@@ -27,4 +27,5 @@ findEvenIndex xs = traverseList 1 xs
 -- Input: 145263 Output: 654321
 -- Input: 1254859723 Output: 9875543221
 descendingOrder :: Integer -> Integer
-descendingOrder n = read (reverse $ sort (show n)) :: Integer
+descendingOrder n | n < 0 = 0
+descendingOrder n | otherwise = read (reverse $ sort (show n)) :: Integer
