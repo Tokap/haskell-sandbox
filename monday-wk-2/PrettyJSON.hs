@@ -1,6 +1,13 @@
-import Numeric
-import SimpleJSON
-import PrettyStub
+module PrettyJSON
+    (
+      renderJValue
+    ) where
+
+import Numeric (showHex)
+import SimpleJSON (JValue(..))
+import Prettify
+import Data.Bits (shiftR, (.&.))
+import Data.Char (ord)
 
 renderJValue :: JValue -> Doc
 renderJValue (JBool True) = text "true"
@@ -8,6 +15,11 @@ renderJValue (JBool False) = text "false"
 renderJValue JNull         = text "null"
 renderJValue (JNumber num) = double num
 renderJValue (JString str) = string str
+renderJValue (JArray ary) = series '[' ']' renderJValue ary
+renderJValue (JObject obj) = series '{' '}' field obj
+    where field (name,val) = string name
+                          <> text ": "
+                          <> renderJValue val
 
 string :: String -> Doc
 string = enclose '"' '"' . hcat . map oneChar
@@ -42,4 +54,8 @@ astral n = smallHex (a + 0xd800) <> smallHex (b + 0xdc00)
 hexEscape :: Char -> Doc
 hexEscape c | d < 0x10000 = smallHex d
             | otherwise   = astral (d - 0x10000)
-  where d = ord c                   
+  where d = ord c
+
+series :: Char -> Char -> (a -> Doc) -> [a] -> Doc
+series open close item = enclose open close
+                       . fsep . punctuate (char ',') . map item
