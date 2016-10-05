@@ -63,4 +63,21 @@ longest s1 s2 = nub $ sort (s1 ++ s2)
 
 ---------------------------------------------------------------------------------------------------------------------
 rowSumOddNumbers :: Integer -> Integer
-rowSumOddNumbers n = sum (drop (fromIntegral ((sum [n,n-1..0]) - n)) (take (fromIntegral (sum [n,n-1..0])) [1,3..]))
+rowSumOddNumbers n | n <= 0 = 0
+rowSumOddNumbers n | n > 0  = sum (drop (fromIntegral ((sum [n,n-1..0]) - n)) (take (fromIntegral (sum [n,n-1..0])) [1,3..]))
+
+---------------------------------------------------------------------------------------------------------------------
+-- In effect: 89 = 8^1 + 9^2 (takes a range of a..b & must return sorted all numbers that do the above)
+sumDigPow :: Integer -> Integer -> [Integer]
+sumDigPow a 0 = 0
+sumDigPow a b = filter eqSquared [a..b]
+
+digits :: Integer -> [Int]
+digits = map (read . (:[])) . show
+
+eqSquared :: Integer -> Bool
+eqSquared x = fromIntegral (sum $ breakAndExponents 1 (digits x)) == fromIntegral x
+
+breakAndExponents :: Integer -> [Int] -> [Int]
+breakAndExponents _ [] = []
+breakAndExponents n (x:xs) = (x^n) : breakAndExponents (n + 1) xs
