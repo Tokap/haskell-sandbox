@@ -1,7 +1,7 @@
 Bluebird    = require 'bluebird'
 { mysql }   = require '../../../lib/container.coffee'
 
-module.exports  = (email) -> new Bluebird (resolve, reject) ->
+module.exports  = (sa) -> new Bluebird (resolve, reject) ->
 
   sql       = '''
     SELECT
@@ -19,7 +19,7 @@ module.exports  = (email) -> new Bluebird (resolve, reject) ->
             `sa`.`social_account_type_id`
   '''
 
-  mysql.query sql, [ email ], (err, results) ->
+  mysql.query sql, [ sa ], (err, results) ->
     if err then return reject err
 
     if not results[0] then return reject new Error('NotFound')
