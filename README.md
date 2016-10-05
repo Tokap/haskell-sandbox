@@ -34,5 +34,12 @@ Monday
 
 Tuesday
   * CodeWars challenges
-  * Review code base
-  * Several "Ah-ha" moments 
+  * Begin review of code base
+  * Several Haskell "Ah-ha" moments
+  * SQL Query Task:
+  * -> Tool Downloads
+  * -> DataBase Review
+  * -> SQL Query Creation
+  * -> CLI Example Review
+  * -> Update CLI Example With Query
+  * -> Support Library Review (Ramda, Bluebird, proprietary)
