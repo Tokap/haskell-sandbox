@@ -25,3 +25,10 @@ module.exports  = (sa) -> new Bluebird (resolve, reject) ->
     if not results[0] then return reject new Error('NotFound')
 
     return resolve results[0]
+
+###### EXPORT THE CONTENT? #######
+# module.exports  =
+#
+#   createForCampaign   : (campaign_id) -> _run createForCampaign(campaign_id)
+#   createForAffiliate  : (user_id) -> _run createForAffiliate(user_id)
+#   createForBlessedCampaigns : -> _run createForBlessedCampaigns()

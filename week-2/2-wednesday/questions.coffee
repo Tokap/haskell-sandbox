@@ -2,11 +2,14 @@
 ############ ORIGINAL SUGGESTED WORK FLOW ###############################
 ########################################################################
 # Consider Moment library (may not be needed with updated query)
-# Slowly increment the CLI Tool function
+# MOMENT: http://momentjs.com/docs/
+# moment          = require 'moment'
+
+# Slowly increment the CLI Tool function:
 # Hello world
 # Print x - Y months
 # Print just one month
-# Build merge structure
+# Build structure to merge results
 
 ##########################################################################
 ############ BASED ON MY QUICK CHECK OF DATA ############################
@@ -22,3 +25,5 @@
 
 # (??) What should my output look like? Query example below?
 # (??) Do we have something that handles formatting these things automatically?
+
+# (??) Ramda and Blackbird review? How far should I go.
