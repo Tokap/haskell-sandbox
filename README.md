@@ -2,6 +2,8 @@
 
 A repo setup to house different projects written in Haskell
 
+## Week 1
+
 Monday
   * Chapter 1
   * Chapter 2
@@ -27,6 +29,8 @@ Weekend
   * CodeWars challenges
   * 1 Rather Long Chapter of Learn You a Haskell
   * (Chapter covered I/O, functional purity, ByteStrings & exception handling)
+
+## Week 2
 
 Monday
   * Complete Chapter 5
