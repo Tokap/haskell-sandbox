@@ -20,6 +20,9 @@
 # (??) Need to understand what tools are being actively used in queries
 # (??) Need to interact with those tools and test output
 
+# (??) What should my output look like? Query example below?
+# (??) Do we have something that handles formatting these things automatically?
+
 ##########################################################################
 ############ WHAT MY APPLICATION IS GOING TO DO #########################
 ########################################################################
@@ -41,3 +44,13 @@
 # June Twitter = June Twitter + Previous Month TOTAL
 # July Twitter = July Twitter _ Previous Month TOTAL
 # Etc...
+
+####### BASICALLY:
+# Run query
+# Add months together as they progress
+# Return object representing data. Possibly:
+
+# June.2015 = { twitter: 196, instagram: 169 }
+# twitter = { June.2015: 196, July.2015: 478 }
+# 2015 = { june: { twitter: 196, instagram: 169 }, july: {...} }
+# june = { 2015: { twitter: 196, instagram: 169, ... }, 2016: { twitter: 297, instagram: 436, ... } }
