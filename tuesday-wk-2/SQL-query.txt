@@ -1,0 +1,36 @@
+SELECT * from social_account WHERE active=1 AND indicator IS NULL
+ORDER BY social_account_type_id ASC, created ASC;
+
+Confirm the way in which this should be orderd
+
+SELECT
+    COUNT(sa.id), sat.name
+FROM
+    social_account sa
+JOIN social_account_type sat ON sa.social_account_type_id = sat.id
+WHERE indicator IS NOT NULL
+    AND sa.created < '2015-08-01 00:00:00'
+    AND (sa.active = 1 OR sa.updated >= '2015-08-01 00:00:00')
+GROUP BY sa.social_account_type_id;
+
+--------------------------------------------------------------------------------
+RETURN A DATE RANGE. RANGE IS 8/1-9/1 IN EXAMPLE BELOW. GOOD FOR ITERATIVE APPROACH
+--------------------------------------------------------------------------------
+SELECT
+    COUNT(sa.id), sat.name, extract(MONTH FROM sa.created) AS mon, extract(YEAR FROM sa.created) AS yr
+FROM
+    social_account sa
+JOIN social_account_type sat ON sa.social_account_type_id = sat.id
+WHERE (sa.created BETWEEN '2015-08-01' and '2015-09-01') AND sa.active = 1 AND indicator IS NULL
+GROUP BY extract(year from sa.created), extract(month from sa.created), sa.social_account_type_id;
+
+--------------------------------------------------------------------------------
+RETURN ALL DATES WITH SUMMED TOTALS (END OF DAY DELIVERABLE)
+--------------------------------------------------------------------------------
+SELECT
+    COUNT(sa.id), sat.name, extract(MONTH FROM sa.created) AS mon, extract(YEAR FROM sa.created) AS yr
+FROM
+    social_account sa
+JOIN social_account_type sat ON sa.social_account_type_id = sat.id
+WHERE sa.active = 1 AND indicator IS NULL
+GROUP BY extract(year from sa.created), extract(month from sa.created), sa.social_account_type_id;

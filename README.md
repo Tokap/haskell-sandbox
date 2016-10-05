@@ -31,3 +31,8 @@ Weekend
 Monday
   * Complete Chapter 5
   * Create custom JSON reader
+
+Tuesday
+  * CodeWars challenges
+  * Review code base
+  * Several "Ah-ha" moments 
