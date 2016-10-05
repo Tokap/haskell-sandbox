@@ -7,5 +7,7 @@ String.prototype.toJadenCase = function () {
 };
 
 persistence = function(num){
-  counter = 0
+  let counter = 0
+  let numArray = num.split()
+  )
 }
