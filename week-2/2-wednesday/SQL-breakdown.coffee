@@ -32,3 +32,6 @@ module.exports  = (sa) -> new Bluebird (resolve, reject) ->
 #   createForCampaign   : (campaign_id) -> _run createForCampaign(campaign_id)
 #   createForAffiliate  : (user_id) -> _run createForAffiliate(user_id)
 #   createForBlessedCampaigns : -> _run createForBlessedCampaigns()
+
+# git remote add upstream https://github.com/influentialpublishers/node-api
+# 4359
