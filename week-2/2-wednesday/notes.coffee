@@ -82,3 +82,50 @@ transactionStart  = (db, req) -> new Bluebird (res, rej) ->
 # -----------------------------------------------------------------------------#
 # -----------------------------------------------------------------------------#
 # -----------------------------------------------------------------------------#
+DomainFactory   = require '../../lib/domain.coffee'
+
+_domain             = DomainFactory
+  baseTable : 'campaign_collateral'
+
+  fieldFactory : (v, db) ->
+    'campaign_id':
+      immutable: true
+      validation: [ v.isInt, v.required ]
+    'content_type':
+      validation: [ v.required ]
+    'link_type':
+      validation: [ v.required ]
+    'title':
+      validation: []
+    'url':
+      validation: [ v.required ]
+
+
+  sqlFactory        : (select, join, where, order) -> "
+    SELECT
+      `campaign_collateral`.`id`              AS `id`,
+      `campaign_collateral`.`campaign_id`     AS `campaign_id`,
+      `campaign_collateral`.`content_type`    AS `content_type`,
+      `campaign_collateral`.`link_type`       AS `link_type`,
+      `campaign_collateral`.`title`           AS `title`,
+      `campaign_collateral`.`url`             AS `url`,
+      `campaign_collateral`.`created`         AS `created`
+    FROM `campaign_collateral`
+      #{( if join then ' ' + join else '' )}
+    WHERE
+      `campaign_collateral`.`deleted` IS NULL
+      AND `campaign_collateral`.`link_type` = 'collateral'
+      #{( if where then ' ' + where else '' )}
+    "
+
+getByCampaignId = (db) -> (campaign_id) ->
+  join  = 'JOIN `campaign` ON `campaign`.`id` = `campaign_collateral`.`campaign_id` '
+  where = ' AND `campaign`.`id` = ? '
+  query   = _domain.get(db, null, join, where, null, 'CampaignWebsite::getByCampaignId')
+  return query [ campaign_id ]
+
+module.exports =
+  save : _domain.save({})
+  del  : _domain.softDelete({})
+
+  getByCampaignId : getByCampaignId

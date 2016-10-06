@@ -55,3 +55,14 @@ Wednesday
   * -> Produce Google Doc Sheet Summarizing Data for MVP
   * -> Review more CLI Syntax
   * -> Begin "Hello World" CLI
+
+Thursday
+  * SQL QUERY TASK CONTINUED:
+  * -> Expand "Hello World" CLI
+  * -> Review CoffeeScript Syntax
+  * -> Review Bluebird Docs / Videos
+  * -> Interact with Promise Objects
+  * -> Merge Multiple Queries into Coherent Stdout Summary
+  * BUILD UPON SQL CLI OUTPUT:
+  * -> Review Proprietary Code for CSV Export Example
+  * -> Review Dashboard for front-end functionality of CSV Export Example
