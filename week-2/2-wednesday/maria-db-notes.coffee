@@ -1,3 +1,6 @@
+# INSTRUCTIONS:
+# https://mariadb.com/kb/en/mariadb/building-mariadb-on-mac-os-x-using-homebrew/
+
 # To start mysqld at boot time you have to copy
 # support-files/mysql.server to the right place for your system
 #
@@ -32,3 +35,21 @@
 # Corporation Ab. You can contact us about this at sales@mariadb.com.
 # Alternatively consider joining our community based development effort:
 # http://mariadb.com/kb/en/contributing-to-the-mariadb-project/
+
+# ssh-keygen -t rsa -b 4096 -C "allenpatrick86@gmail.com"
+# /Users/patrickallen/.ssh/id_rsa
+
+#################### GITHUB SSH NOTES ###############################
+SHA256:iEDHDG1kYDyUDAWAJFSIA1whsRxP/omAU/Da9ElzcDk allenpatrick86@gmail.com
+The key's randomart image is:
++---[RSA 4096]----+
+|/#&&* ..         |
+|BB%o=oE          |
+|o=+=o ..         |
+| =.+o=..         |
+|. ..+o. S        |
+|                 |
+|                 |
+|                 |
+|                 |
++----[SHA256]-----+
