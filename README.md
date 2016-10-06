@@ -47,3 +47,11 @@ Tuesday
   * -> CLI Example Review
   * -> Update CLI Example With Query
   * -> Support Library Review (Ramda, Bluebird, proprietary)
+
+Wednesday
+  * SQL Query Task Continued:
+  * -> Formal Node Installation Process
+  * -> SQL Query Update
+  * -> Produce Google Doc Sheet Summarizing Data for MVP
+  * -> Review more CLI Syntax
+  * -> Begin "Hello World" CLI
