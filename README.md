@@ -71,3 +71,4 @@ Thursday
   * -> Update CLI to output a CSV file
   * -> Simplify Code Used for Query
   * -> Remove Working Notes
+  * -> Update Story with User Expectations
