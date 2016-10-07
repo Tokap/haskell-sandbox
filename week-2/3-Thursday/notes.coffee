@@ -33,3 +33,11 @@ Promise.all([User.findOne(), Product.findOne()])
 
 ### Map over the results of x in your results.map (x,i) functions. X is an
 ### array of object
+
+################ SOME ORIGINAL SYNTAX USED IN THE PROCESS #####################
+# Original Output to stdout:
+# x.map (y) -> console.log datesForConsole[i] + " - " + y.name + ": " + y.total + " active accounts"
+# x.map (y) -> console.log datesForConsole[i] + " , " + y.name + " , " + y.total + "\n"
+
+# queryList = [queryString(date) for date in dateArray]
+# mergedQueryList = [].concat.apply([], queryList)
