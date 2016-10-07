@@ -72,3 +72,13 @@ Thursday
   * -> Simplify Code Used for Query
   * -> Remove Working Notes
   * -> Update Story with User Expectations
+
+Friday
+  * SQL QUERY TASK COMPLETED:
+  * -> Update program to query for starting date rather than hard-code
+  * -> Reduce use of objects where possible
+  * -> Review Bluebird docs & Read about promise chains
+  * -> Derive function to amalgamate promises and chain process correctly
+  * -> Extract complex functions into smaller parts
+  * -> Update naming of functions to match underscore convention
+  * -> Continue reviewing internal file interaction for DB manipulation
