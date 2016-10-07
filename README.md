@@ -65,4 +65,9 @@ Thursday
   * -> Merge Multiple Queries into Coherent Stdout Summary
   * BUILD UPON SQL CLI OUTPUT:
   * -> Review Proprietary Code for CSV Export Example
-  * -> Review Dashboard for front-end functionality of CSV Export Example
+  * -> Review Dashboard for Front-end Functionality of CSV Export Example
+  * -> Review FS Docs / Videos
+  * -> Download LibreOffice for CSV review
+  * -> Update CLI to output a CSV file
+  * -> Simplify Code Used for Query
+  * -> Remove Working Notes
