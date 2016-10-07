@@ -82,3 +82,7 @@ _run      = ->
   console.log '---- Querying DB for Social Network Data -----'
   fs.writeFileSync getUserHome() + "/Desktop/social-network-data.csv", "Date, Name, Total" + "\n", "utf8"
   runProcess()
+
+
+
+  loopToNow(results).map (x) -> reduceMonth(x)
