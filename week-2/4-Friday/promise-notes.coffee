@@ -12,3 +12,6 @@ function handlerB(resultA, resultB) {
     // more processing
     return // anything that uses resultA and resultB
 }
+
+# WHEN USING COMMAND LINE ARGUMENTS, NODE HAS THE FOLLOWING PACKAGE:
+# https://www.npmjs.com/package/commander
