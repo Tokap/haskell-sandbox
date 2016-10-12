@@ -22,67 +22,62 @@ queryString       = (date) -> """
 """
 
 startDateQuery     = """
-  SELECT MIN(created) as StartDate
+  SELECT MIN(created) as startDate
   FROM social_account
 """
 ################ DATE MANIPULATION FUNCTIONS ###################
-iterateDate = (momentObject) ->
+_advanceMonth = (momentObject) ->
   return moment(momentObject).add('1', 'months').format('YYYY-MM')
 
-reduceMonth = (momentObject) ->
+_reduceMonth = (momentObject) ->
   return moment(momentObject).subtract('1', 'months').format('MMM-YYYY')
 
-loopToNow = (startingDate) ->
-  start_date = moment().format(startingDate) #06/2015 is the beginning of creation
-  now = moment().format("YYYY-MM")
-  start_date = iterateDate(start_date) until start_date > now
+_formatUnixDate = (dateObject) ->
+  moment.unix(dateObject).format("YYYY-MM")
 
-datesForQuery = loopToNow("2015-06")
-# datesForOutput = datesForQuery.map (x) -> reduceMonth(x)
+_loopToNow = (startingDate) ->
+  startDate = moment().format(startingDate)
+  now = moment().format("YYYY-MM")
+  startDate = _advanceMonth(startDate) until startDate > now
 ################# QUERY & PROMISE FUNCTIONS ###################
 _getData  = (sql) ->
   MySql.query(mysql, sql)()
   .then (result) ->
     return result
-    process.exit(23)
 
 _getStartDate  = (sql) ->
   MySql.query(mysql, sql)()
   .then (result) ->
-    return moment.unix(result[0].StartDate).format("YYYY-MM")
-    process.exit(23)
+    return _formatUnixDate result[0].startDate
 
-allPromises = (queryList) ->
+_getAllPromises = (queryList) ->
   queryList.map (query) ->
     return _getData(query)
 
-getUserHome = ->
+_getUserHome = ->
   process.env.HOME or process.env.USERPROFILE
-# "2015-06"
 
-# d = c.then(->
-#     promiseD
-#   )
-runProcess = ->
+_finalQueryProcess = ->
   startDate = _getStartDate(startDateQuery)
   datesForOutput = startDate.then(->
-                 loopToNow(startDate).map (x) -> reduceMonth(x)
-  )
-  startDate
-    .then (results) -> loopToNow(results)
-    .then (results) -> [].concat.apply([], [queryString(date) for date in results])
-    .then (results) -> Promise.all allPromises(results)
-    .then (results) ->
-      results.map (x, i) ->
-        x.map (y) -> fs.appendFileSync getUserHome() + "/Desktop/social-network-data.csv", datesForOutput[i] + " , " + y.name + " , " + y.total + "\n", "utf8"
-      console.log "Output has been saved to Desktop as 'social-network-data.csv'"
-      process.exit(23)
+    startDate
+      .then (results) -> _loopToNow(results).map (x) -> _reduceMonth(x)
+    )
+  datesForOutput.then(->
+    startDate
+      .then (results) -> _loopToNow results
+      .then (results) -> [].concat.apply([], [queryString(date) for date in results])
+      .then (results) -> Promise.all _getAllPromises(results)
+      .then (results) ->
+        results.map (x, i) ->
+          x.map (y) -> fs.appendFileSync _getUserHome() + "/Desktop/social-network-data.csv", datesForOutput.value()[i] + " , " + y.name + " , " + y.total + "\n", "utf8"
+        console.log "Output has been saved to Desktop as 'social-network-data.csv'"
+        process.exit(23)
+    )
 ######################## RUN PROCESS ##########################
 _run      = ->
   console.log '---- Querying DB for Social Network Data -----'
-  fs.writeFileSync getUserHome() + "/Desktop/social-network-data.csv", "Date, Name, Total" + "\n", "utf8"
-  runProcess()
+  fs.writeFileSync _getUserHome() + "/Desktop/social-network-data.csv", "Date, Name, Total" + "\n", "utf8"
+  _finalQueryProcess()
 
-
-
-  loopToNow(results).map (x) -> reduceMonth(x)
+module.exports  = _run

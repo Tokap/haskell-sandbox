@@ -1,0 +1,43 @@
+{
+    "APP_NAME": "influential-api",
+    "TIN": {
+        "DATABASE": {
+          "ELASTICSEARCH": {
+            "host" : "10.20.0.1",
+            "port" : 31003
+          },
+
+          "MYSQL": {
+            "host"      : "10.20.0.1",
+            "port"      : 31005,
+            "database"  : "ip_dashboard",
+            "cache_ttl" : 512,
+            "user"      : "root",
+            "password"  : ""
+          },
+          "CRON_MYSQL": {
+            "host"     : "10.20.0.1",
+            "port"     : 31005,
+            "user"     : "root",
+            "password" : "",
+            "database" : "ip_dashboard",
+            "charset"  : "UTF8MB4"
+          },
+
+          "RETHINKDB": {
+            "host"              : "10.20.0.1",
+            "port"              : "31001",
+            "user"              : "admin",
+            "password"          : "",
+            "database"          : "ip_dashboard",
+            "hostname_override" : true
+          }
+        },
+
+        "SOA":{
+          "USER":{
+            "password" : "password"
+          }
+        }
+    }
+}
