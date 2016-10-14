@@ -25,6 +25,11 @@ renderRoleOptions: (label) ->
     data[Formatter.prettify role.role] = role.role for role in @props.roles
   @renderOptions(data, label)
 
+
+# Query route hits:
+user/search/advanced?params=values
+
+
 # authorize/privilege/pathMap.coffee
 # routes/user.coffee -> Leads to:
   router.get '/user/search/advanced', JW(
@@ -32,61 +37,59 @@ renderRoleOptions: (label) ->
     JWUser.getRelated,
     JWUser.match
   )
+# Review content from this path:
+JWUser            = require('../middleware/jw.user-archetype')
 
-# Object returns from query results:
-# Return from good query for verified status and role: root
-{params: {verified: "1", role: "root", offset: 0, limit: 16, page: 1}, count: "9", rows: [{,…},…]}
-  count:"9"
-  params:{verified: "1", role: "root", offset: 0, limit: 16, page: 1}
-    limit:16
-    offset:0
-    page:1
-    role:"root"
-    verified:"1"
-  rows:[{,…},…]
-    0:{,…}
-    1:{result: {id: "3886", name_first: "Jarin", name_last: "Ratanapeanchai", username: "jarinlv",…},…}
-    2:{,…}
-    3:{,…}
-    4:{,…}
-    5:{,…}
-    6:{,…}
-    7:{,…}
-    8:{,…}
+# Continue to review data paths. Problem could be something like a 'SELECT *'
+# query when All is chosen for the problem filter box.
 
-# return query from status: verified, role: all - FAIL
-{params: {verified: "1", offset: 0, limit: 16, page: 1}, count: "8742", rows: [{,…},…]}
-count:"8742"
-params:{verified: "1", offset: 0, limit: 16, page: 1}
-limit:16
-offset:0
-page:1
-verified:"1"
-rows:[{,…},…]
-0:{,…}
-1:{result: {id: "2682", name_first: "A Continuous", name_last: "Lean", username: "acontinuouslean",…},…}
-2:{,…}
-3:{result: {id: "363", name_first: "A Test", name_last: "User", username: "piotrcreatedtest1",…},…}
-4:{,…}
-5:{,…}
-6:{,…}
-7:{result: {id: "41", name_first: "Aaron", name_last: "Carpenter", username: "aaroncarpenter",…},…}
-8:{,…}
-9:{,…}
-10:{,…}
-11:{,…}
-12:{,…}
-13:{,…}
-14:{,…}
-15:{,…}
+# Alternatively, this could be an issue of conditional logic - "if all, then *"
 
-# Unverified & role: campaign_manager
-{params: {verified: "0", role: "campaign_manager", offset: 0, limit: 16, page: 1}, count: "0",…}
-count:"0"
-params:{verified: "0", role: "campaign_manager", offset: 0, limit: 16, page: 1}
-limit:16
-offset:0
-page:1
-role:"campaign_manager"
-verified:"0"
-rows:[]
+# jw.user-archetype.js
+const search = {
+  awesomize  : (v) => ({
+    page                   : {
+      read      : R.path(['query', 'page'])
+      , validate: [v.isInt]
+    }
+    , role                 : {
+      read      : R.path(['query', 'role'])
+      , validate: []
+    }
+
+  , io: (req, data) => ({
+    response: req.DO.User.search(req.mysql2)(
+      data
+    )
+  })
+
+const getRelated = ({
+  awesomize: (v) => ({
+    response: {
+      read: R.path(['data', 'response'])
+      , validate: [v.required]
+    }
+  })
+
+
+# mysql-objects/index.js
+# mysql-objects/user.js
+    verified             : () => {
+      return {
+        where:' AND `user`.`verified` = :verified'
+      }
+    },
+
+    banned               : () => {
+      return {
+        where:' AND IF(:banned = \'0\', `user`.`banned` = 0, `user`.`banned` != 0)'
+      }
+
+    role                 : () => {
+      return {
+        join : 'JOIN `user_role` ON `user_role`.`user_id` = `user`.`id`'
+        + ' AND `user_role`.`deleted` IS NULL'
+        + ' JOIN `role` ON `user_role`.`role_id` = `role`.`id`',
+        where:' AND `role`.`role` = :role'
+      }
+# Bug ultimately reduced to issues with pimp-my-sql
