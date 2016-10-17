@@ -28,7 +28,7 @@ _log = (outputText) ->
 QUERY_FORMAT = 'YYYY-MM-01 00:00:00'
 OUTPUT_FORMAT = 'MMM-YYYY'
 
-_createQueryString       = (date) -> """
+_mainQueryString       = """
   SELECT
     COUNT(`sa`.`id`) AS `total`,
     `sat`.`name` AS `name`
@@ -36,10 +36,10 @@ _createQueryString       = (date) -> """
   JOIN `social_account_type` AS `sat`
     ON `sa`.`social_account_type_id`= `sat`.`id`
   WHERE
-    (`sa`.`created` < "#{date}")
+    (`sa`.`created` < ?)
     AND (
             (`sa`.`active` = 1 AND `sa`.`indicator` IS NULL)
-        OR (`sa`.`active` = 0 AND `sa`.`updated` >= "#{date}")
+        OR (`sa`.`active` = 0 AND `sa`.`updated` >= '2016-11-01 00:00:00')
     )
   GROUP BY `sa`.`social_account_type_id`;
 """
@@ -65,11 +65,13 @@ _loopToNow = (startingDate) ->
   startDate = _advanceMonth(startDate) until startDate > now
 
 # Query & Promise Functions
-_getData  = (sql) ->
-  MySql.query(mysql, sql)()
+_socialAccountQuery  = (date) ->
+  params = [date, date]
+  MySql.query(mysql, _mainQueryString)() [ params ]
+  .then (results) -> console.log results
 
 _getStartDate  = (sql) ->
-  _getData(sql)
+  MySql.query(mysql, sql)()
   .then (result) -> _formatUnixDate result[0].startDate
 
 _formatString = (text) ->
@@ -88,10 +90,18 @@ _appendOutput = (dates, i) -> (socialAccount) ->
 
 _getQueryData = (allActiveMonths) ->
   datesForOutput = R.map _reduceMonth, allActiveMonths
-  queryByMonth = R.chain _createQueryString, allActiveMonths
-  Bluebird.map queryByMonth, _getData
-  .map (monthlyData, i) ->
-    R.map _appendOutput(datesForOutput, i), monthlyData
+  # Bluebird.map allActiveMonths, _socialAccountQuery
+  _socialAccountQuery
+
+  _getStartDate startDateQuery
+  .then console.log
+  # allActiveMonths.map (month) ->
+  #   console.log month
+  #   _socialAccountQuery month
+  #   .then (result) -> console.log "Some RESULTS!!!! -----", results
+
+  # .map (monthlyData, i) ->
+  #   R.map _appendOutput(datesForOutput, i), monthlyData
 
 _printQueryResultsToCSV = ->
   _getStartDate startDateQuery
