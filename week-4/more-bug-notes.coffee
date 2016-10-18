@@ -40,3 +40,32 @@ _updatePostWithError = (e, post_id) ->
 # BadRequest: Could Not Get Facebook Status
 # Front end has absolutely no reference to this error.
 # Review backend to determine why
+
+# ERROR OUTPUT:
+# 0|influent | ----- LOOK MA! AN ERROR! BadRequest: Could Not Get Facebook Status
+# 0|influent | POST /campaign/537/offer/4658/verify 400 3413.315 ms - 180
+
+# ------------------------------------------------------
+# ---------- PR Notes from Michal  ---------------------
+# ------------------------------------------------------
+
+# mszymulanski 16 minutes ago
+# Pass in more information to the ValidationError. Look at node-api/lib/error.coffee.
+# The constructor takes 3 arguments: messages, method, code. You can definitely
+# add method. It's our convention to list the file and method where an error
+# is being thrown:
+Err.ValidationError(
+   {post_url: 'invalid_facebook_post_url'}
+   ' lib/facebook.coffee::getStatusById'
+ )
+
+# If there is anything wrong with this error, future developers will know
+# where to look.
+
+# .catch (e) -> catches all errors. If there is anything other than validation
+# wrong with this method it would still throw a ValidationError.
+# You should check.
+.catch (e) ->
+   if e.name is 'A Mark Zuckerberg error'
+      throw Err.ValidationError(...)
+   else throw e
