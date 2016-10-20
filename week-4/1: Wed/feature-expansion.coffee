@@ -134,7 +134,9 @@ const countCampaignConcepts = {
   }
 }
 
+# I'm copying the functionality of: pending_brand_approval
 # ------------------------------------------------------------------
+# [API] - jw.offer-concept.idea.js (lines 245 - 252)
 const countCampaignConcepts = {
   transform: (req, data) => {
     if (R.length(data.campaign_offers) > 0) {
@@ -143,3 +145,51 @@ const countCampaignConcepts = {
     return 0;
   }
 }
+# ------------------------------------------------------------------
+# [API] - campaign-concept.coffee
+# NEW-ADDITION-FOR-FEATURE (lines 46 - 52)
+  router.get '/campaign-concept/:campaign_id/offer/count', JW(
+    getParameters('params', ['campaign_id'])
+    JwIdea.getOffers
+    JwIdea.filterClientReady
+    JwIdea.countCampaignConcepts
+  )
+
+# ------------------------------------------------------------------
+# ------ This is how pending_brand_approval is stored --------------
+# ------------------------------------------------------------------
+# lines 873 - 896 in domain/campaign.coffee
+getById = (db, no_cache) ->
+  _getById               = _domain.getById(db, no_cache)
+  _getChangeRequestCount = getChangeRequestCount(db)
+  _getCampaignStatsCount = getCampaignStatsCount(db)
+  _getCampaignLegalCount = getCampaignLegalCount(db)
+
+  (campaign_id) ->
+    Bluebird. all [
+      _getById(campaign_id)
+      _getChangeRequestCount(campaign_id)
+      _getCampaignStatsCount(campaign_id)
+      _getCampaignLegalCount(campaign_id)
+    ]
+    .spread (campaign, request_count, stats_count, legal_count) ->
+      R.merge(campaign,
+        pending_change_request_count: parseInt request_count.count, 10
+        invalid_change_request_count: parseInt request_count.invalid, 10
+        pending_brand_approval:
+          parseInt request_count.pending_brand_approval, 10
+        pending_campaign_manager_approval:
+          parseInt request_count.pending_campaign_manager_approval, 10
+        stats_count                 : parseInt stats_count, 10
+        legal_count                 : parseInt legal_count, 10
+      )
+
+# ------------------------------------------------------------------
+# ---- In reviewing the database structure, our count is: ----------
+# ------------------------------------------------------------------
+
+# campaign-concept-element
+
+# The issue becomes checking the status of this particular item.
+# Is it pending? Approved? etc.
+# Current query tied to route will return the number for ALL, but just pending
