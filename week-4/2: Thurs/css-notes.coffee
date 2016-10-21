@@ -81,3 +81,18 @@ element.style {
 
 # This is all manageable, but I'm starting to think it doesn't make sense.
 # Consider suggesting the button simply grey-out like the others when nothing pending
+
+
+
+# The parent element needs its display type set to flex
+
+div.parent {
+  display: flex;
+  height: 100%;
+}
+# Then you set the child element's align-self to flex-end.
+
+span.child {
+  display: inline-block;
+  align-self: flex-end;
+}
