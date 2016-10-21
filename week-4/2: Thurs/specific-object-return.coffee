@@ -181,8 +181,8 @@ campaign_offers: [
       ]
     }
   ]
-  }
-  ],
+}
+],
 internal_status: "approved",
 external_status: "pending"
 }
