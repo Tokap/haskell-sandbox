@@ -51,13 +51,14 @@ const _getOffers = JW.pipe(
           query [ campaign_id ]
 
           # _domain = DomainFactory
-          # DomainFactory = require '../../lib/domain'
+          # DomainFactory = require '../../lib/domain' #LOOK-HERE-PATRICK
             DomainFactory.getWhereNoCache = (db, where, method = 'Domain.getWhereNoCache') ->
               sql   = MySql.noCacheQuery _sqlFactory(null, null, where)
               return MySql.select(db, sql, method)
 
             # Uses:
-            _sqlFactory     = options.sqlFactory
+            module.exports    = Domain = (options) ->
+              _sqlFactory     = options.sqlFactory
 
               # MySql = require './promise-mysql'
               noCacheQuery    = (sql) ->
@@ -114,6 +115,39 @@ const _getOffers = JW.pipe(
                       throw err
 
                   return row
+# combineOffers
+const combineOffers = {
+  transform: (req, data) => {
+    const ideas             = data.offer_concept_ideas;
+    const states            = data.offer_concept_idea_states;
+    const concepts          = data.concept_elements;
+    const campaign_offers   = data.campaign_offers;
+    const _groupConceptsIntoOffers = R.compose(
+      R.flip(R.map)(campaign_offers)
+    , assocFromGroups('offer_concepts', 'id')
+    );
+
+    return R.compose(
+      R.omit([ 'offer_concepts'
+             , 'offer_concept_ideas'
+             , 'offer_concept_idea_states'
+             , 'concept_elements'
+             , 'campaign_id'
+             ])
+    , R.assoc('campaign_offers'
+      , R.compose(
+          R.map(_squashOfferState)
+        , _groupConceptsIntoOffers
+        , R.map(_combineConcepts(concepts))
+        , R.groupBy(R.prop('offer_id'))
+        , _combineIdeas(ideas)
+        )(states)
+      )
+    )(data);
+  }
+};
+
+
 
 ##### ---------- JwConceptElement.getByCampaignId ------
       const JwConceptElement.getByCampaignId = {
