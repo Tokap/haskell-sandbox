@@ -152,7 +152,7 @@ campaign_offers: [
           }
         ]
       }
-    ]
+    ] #end of offer concept array
   },
   {
     id: "20",
@@ -181,8 +181,8 @@ campaign_offers: [
       ]
     }
   ]
-  }
-  ],
+}
+],
 internal_status: "approved",
 external_status: "pending"
 }

@@ -215,3 +215,15 @@ const countExternalPendingConcepts = {
 }
 
 const _countExternalPending = countIf(R.propEq('external_status', PENDING))
+
+
+# this page loads it's contents based on the brand-manager ID# (1364 in my case)
+# Route: api/brand-manager/:brand_manager_id/
+
+# When using the search bar, the search is narrowed through:
+# Route Example: api/brand-manager/1364/campaign?network_type=twitter?limit=16
+
+# We need the amount of Concepts that are pending client approval.
+# Based on this information, the 'Concepts Pending' button will behave differently.
+# The behavior and method of information transmission should be the same as the
+# the content pending approval button found in:
