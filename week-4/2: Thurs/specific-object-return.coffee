@@ -152,7 +152,7 @@ campaign_offers: [
           }
         ]
       }
-    ]
+    ] #end of offer concept array
   },
   {
     id: "20",
