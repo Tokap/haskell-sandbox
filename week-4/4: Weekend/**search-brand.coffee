@@ -46,17 +46,16 @@ searchBrand          = (req, res, next) ->
 JwIdea.countExternalPending (_makeReq campaign_id: campaign_id)
 
 _makeReq = (data) -> R.assoc('data', data, req)
-
-
-
-
-
+# maybe make another sub-function like _addChangeRequestCount
+_testFunctionPatrick = (db) -> (campaign) ->
+  JwIdea.countExternalPending (_makeReq campaign_id: campaign.id)
+  .then R.merge(campaign)
 # -------------- BACK TO THE SEARCH FUNCTION:  -----------------
 # -------------- I Think this is the important part  -----------------
 # -------------- _addChangeRequestCount  -----------------
 _addChangeRequestCount = (db) -> (campaign) ->
   Campaign.getChangeRequestCount(db)(campaign.id) # I get access to ID #LOOK-HERE-PATRICK
-  # getChangeRequestCount is query show in named file
+  # getChangeRequestCount is query shown in named file
 
   # Below grabs the attributes listed out of the query.
   .then R.compose(
@@ -78,6 +77,8 @@ _filterCampaignForBrand = (campaign) ->
     ]
   delete campaign[key] for key in blacklist
   return campaign
+
+# --------- Scrapsheet
 
 
 
