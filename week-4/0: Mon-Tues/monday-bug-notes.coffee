@@ -1,1 +1,0 @@
-# Cleared of proprietary code

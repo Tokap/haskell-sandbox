@@ -17,3 +17,8 @@ router.get '/campaign-concept/:campaign_id/offer/count', JW(
   # JwIdea.filterClientReady
   JwIdea.countExternalPendingConcepts
 )
+
+# Our final product produces a count via:
+concept_external_pending_count
+
+checkForConceptExistence

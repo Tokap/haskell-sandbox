@@ -1,1 +1,0 @@
-# Cleard of proprietary data

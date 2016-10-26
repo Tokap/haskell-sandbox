@@ -1,1 +1,0 @@
-# Prorpietary info removed
