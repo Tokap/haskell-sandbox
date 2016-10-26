@@ -1,9 +1,10 @@
 # ------------- FULL SIZE --------------
 div.account-card.brand-campaign-card.clearfix {
-  height: 564px;
+  height: 564px; @DONE
 }
 
 # Container for buttons
+ @DONE
 div.additional {
   position: absolute;
   width: 95%;
@@ -19,14 +20,14 @@ div.additional { UNCHANGED }
 
 # ------------- MEDIA QUERY: 800px - 683px --------------
 div.account-card.brand-campaign-card.clearfix {
-  height: 645px; #43.5em
+  height: 645px;  @DONE?
 }
 
-div.additional { UNCHANGED }
+div.additional { width: 97%; }
 
 # ------------- MEDIA QUERY: Less than 682 --------------
 div.account-card.brand-campaign-card.clearfix { UNCHANGED }
-div.additional { UNCHANGED }
+div.additional { width: 97%; }
 
 # ------------- Finally: --------------
 # If the result of the massive query we're constructing returns 0, the
