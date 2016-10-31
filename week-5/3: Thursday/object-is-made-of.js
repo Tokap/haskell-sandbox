@@ -1,0 +1,15 @@
+module.exports = {
+  Campaign: require('./campaign.js')
+, ConceptElement: require('./campaign/concept-element.js')
+, Group: require('./group.js')
+, GroupTag: require('./group-tag.js')
+, OfferConceptIdea: require('./offer-concept-idea.js')
+, User: require('./user.js')
+, Comment: require('./comment.js')
+, MasterList: require('./master-list.js')
+, StateOfThings: require('./state.js')
+, Actor : require('./actor-archetype.js')
+, Role : require('./role.js')
+, SocialAccount: require('./social-account.js')
+, ResearchCategory : require('./research-category.js')
+};
